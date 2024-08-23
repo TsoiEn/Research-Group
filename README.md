@@ -15,4 +15,3 @@ This repository serves as a collection of research topics and projects we are cu
 
 ---
 
-Feel free to contribute by submitting pull requests or opening issues for discussion. Collaboration is encouraged!
