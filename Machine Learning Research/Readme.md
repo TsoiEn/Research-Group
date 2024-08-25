@@ -1,1 +1,1 @@
-**File designated to machine learning research**
+**Folder designated to machine learning research**
