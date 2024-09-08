@@ -22,18 +22,4 @@ This document outlines various technologies and their suitability for managing s
 - **Use Case**: Django is well-suited for managing and storing student credentials, as it includes features for data management, authentication, and security. It can handle database operations and provide an administrative interface for managing records.
 - **Recommended For**: Use Django as the back-end for securely storing and managing student credentials. Django's ORM (Object-Relational Mapping) can efficiently handle database interactions, and its built-in authentication features can be used to manage user access and permissions.
 
-## Conclusion
 
-Choose the technologies based on their strengths and fit for your project needs. Use Web3.js for blockchain-based verification, React.js for creating the user interface, and Django for the back-end management and storage of student credentials.
-
-## Contributing
-
-If you have any suggestions or improvements for this documentation, please submit a pull request or open an issue.
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
-
-## Contact
-
-For questions or feedback, please contact [your email address].
