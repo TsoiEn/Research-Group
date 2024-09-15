@@ -3,6 +3,8 @@ package blockchain
 import (
 	"bytes"
 	"crypto/sha256"
+	"fmt"
+	"time"
 )
 
 // BlockChain structure contains a slice of blocks.
@@ -12,21 +14,29 @@ type BlockChain struct {
 
 // Block represents a block in the blockchain.
 type Block struct {
-	Hash     []byte
-	Data     []byte
-	PrevHash []byte
+	Index     int
+	Timestamp string
+	Data      []byte
+	Hash      []byte
+	PrevHash  []byte
 }
 
 // DeriveHash generates a hash for the block using the data and the previous block's hash.
 func (b *Block) DeriveHash() {
-	info := bytes.Join([][]byte{b.Data, b.PrevHash}, []byte{})
+	// Concatenate data, previous hash, index, and timestamp
+	info := bytes.Join([][]byte{[]byte(fmt.Sprintf("%d", b.Index)), []byte(b.Timestamp), b.Data, b.PrevHash}, []byte{})
 	hash := sha256.Sum256(info)
-	b.Hash = hash[:]
+	b.Hash = hash[:] // Store the hash as a byte slice
 }
 
 // CreateBlock creates a new block with the provided data and previous block's hash.
-func CreateBlock(data string, prevHash []byte) *Block {
-	block := &Block{[]byte{}, []byte(data), prevHash}
+func CreateBlock(index int, data string, prevHash []byte) *Block {
+	block := &Block{
+		Index:     index,
+		Timestamp: time.Now().Format(time.RFC3339),
+		Data:      []byte(data),
+		PrevHash:  prevHash,
+	}
 	block.DeriveHash()
 	return block
 }
@@ -34,16 +44,17 @@ func CreateBlock(data string, prevHash []byte) *Block {
 // AddBlock adds a new block with the provided data to the blockchain.
 func (chain *BlockChain) AddBlock(data string) {
 	prevBlock := chain.Blocks[len(chain.Blocks)-1]
-	newBlock := CreateBlock(data, prevBlock.Hash)
+	newIndex := prevBlock.Index + 1
+	newBlock := CreateBlock(newIndex, data, prevBlock.Hash)
 	chain.Blocks = append(chain.Blocks, *newBlock)
 }
 
 // Genesis creates the first block in the blockchain (genesis block).
 func Genesis() *Block {
-	return CreateBlock("Genesis", []byte{})
+	return CreateBlock(0, "Genesis", []byte{})
 }
 
 // NewBlockChain creates a new blockchain with the genesis block.
-func NewBlock() *BlockChain {
+func NewBlockChain() *BlockChain {
 	return &BlockChain{[]Block{*Genesis()}}
 }
