@@ -13,7 +13,7 @@ func main() {
 	// Add new blocks to the blockchain
 	chain.AddBlock("Choi a member of this group")
 	chain.AddBlock("Raffy a member of this group")
-	chain.AddBlock("Blake a member of this group")
+	chain.AddBlock("Yonne a member of this group")
 
 	// Print out the details of each block in the blockchain
 	for _, block := range chain.Blocks {
