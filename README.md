@@ -5,7 +5,7 @@
    - target of this project is the credentials
 
 *Storing Student Credential System*
-   - pictures
+   - Flowchart
    - <img width="580" alt="Screenshot 2024-09-17 at 1 45 30 PM" src="https://github.com/user-attachments/assets/a8bddd76-a690-48a9-9a93-2aace8c2f56d">
 
 **Figma link for prototyping**
