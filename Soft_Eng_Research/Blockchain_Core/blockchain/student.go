@@ -72,7 +72,7 @@ func UpdateStudentCredentials(id int, newCredential Credential) error {
 	return nil
 }
 
-// FindStudentByID should find and return a student by ID (this needs to be implemented)
+// TODO FindStudentByID should find and return a student by ID (this needs to be implemented)
 func FindStudentByID(id int) (*Student, error) {
 	// Logic to find the student by ID from the blockchain
 	// For now, return nil and an error to avoid compilation issues
@@ -108,7 +108,7 @@ func GenerateCredentialHash(cred Credential) []byte {
 	return hash[:]
 }
 
-// ValidateCredentialData validates the data of the credential (to be implemented)
+// TODO ValidateCredentialData validates the data of the credential (to be implemented)
 func ValidateCredentialData(cred Credential) error {
 	// Add validation logic for credential data if needed
 	return nil
