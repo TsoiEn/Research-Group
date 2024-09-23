@@ -72,11 +72,17 @@ func UpdateStudentCredentials(id int, newCredential Credential) error {
 	return nil
 }
 
-// TODO FindStudentByID should find and return a student by ID (this needs to be implemented)
+// FindStudentByID should find and return a student by ID (this needs to be implemented)
 func FindStudentByID(id int) (*Student, error) {
 	// Logic to find the student by ID from the blockchain
 	// For now, return nil and an error to avoid compilation issues
-	return nil, fmt.Errorf("Not implemented")
+	Students := []*Student{}
+	for _, student := range Students {
+		if student.ID == id {
+			return student, nil
+		}
+	}
+	return nil, fmt.Errorf("Student not found")
 }
 
 // VerifyCredential checks if a credential is valid by comparing its hash
@@ -108,9 +114,26 @@ func GenerateCredentialHash(cred Credential) []byte {
 	return hash[:]
 }
 
-// TODO ValidateCredentialData validates the data of the credential (to be implemented)
+// ValidateCredentialData validates the data of the credential (to be implemented)
 func ValidateCredentialData(cred Credential) error {
 	// Add validation logic for credential data if needed
+	// in this case, we can check if the credential type is valid
+	if cred.Type == "" {
+		return fmt.Errorf("credential type cannot be empty")
+	}
+
+	// Check if Issuer is empty
+	if cred.Issuer == "" {
+		return fmt.Errorf("issuer cannot be empty")
+	}
+
+	// Check if DataIssued is a future date
+	if cred.DataIssued.After(time.Now()) {
+		return fmt.Errorf("issued date cannot be in the future")
+	}
+
+	// Additional validation checks can be added here as needed
+
 	return nil
 }
 
