@@ -30,11 +30,11 @@ func (b *Block) DeriveHash() {
 }
 
 // CreateBlock creates a new block with the provided data and previous block's hash.
-func CreateBlock(index int, data string, prevHash []byte) *Block {
+func CreateBlock(index int, blockData []byte, prevHash []byte) *Block {
 	block := &Block{
 		Index:     index,
 		Timestamp: time.Now().Format(time.RFC3339),
-		Data:      []byte(data),
+		Data:      blockData, // Store the serialized credential data
 		PrevHash:  prevHash,
 	}
 	block.DeriveHash()
@@ -42,16 +42,17 @@ func CreateBlock(index int, data string, prevHash []byte) *Block {
 }
 
 // AddBlock adds a new block with the provided data to the blockchain.
-func (chain *BlockChain) AddBlock(data string) {
+func (chain *BlockChain) AddBlock(data string, blockData []byte) {
 	prevBlock := chain.Blocks[len(chain.Blocks)-1]
 	newIndex := prevBlock.Index + 1
-	newBlock := CreateBlock(newIndex, data, prevBlock.Hash)
+	// Use blockData instead of data for the block
+	newBlock := CreateBlock(newIndex, blockData, prevBlock.Hash)
 	chain.Blocks = append(chain.Blocks, *newBlock)
 }
 
 // Genesis creates the first block in the blockchain (genesis block).
 func Genesis() *Block {
-	return CreateBlock(0, "Genesis", []byte{})
+	return CreateBlock(0, []byte("Genesis"), []byte{}) // Make sure to pass a []byte for Data
 }
 
 // NewBlockChain creates a new blockchain with the genesis block.

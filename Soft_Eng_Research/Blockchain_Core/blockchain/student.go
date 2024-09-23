@@ -23,6 +23,12 @@ type Credential struct {
 	Hash       []byte
 }
 
+// Serialize converts the Credential to a byte array
+func (cred Credential) Serialize() []byte {
+	// Convert the Credential to a byte array
+	return []byte(fmt.Sprintf("%s|%s|%s", cred.Type, cred.Issuer, cred.DataIssued.Format(time.RFC3339)))
+}
+
 // AddNewStudent creates and returns a new student
 func AddNewStudent(id int, firstName, lastName string, age int, birthDate time.Time) *Student {
 	student := &Student{
@@ -37,7 +43,7 @@ func AddNewStudent(id int, firstName, lastName string, age int, birthDate time.T
 }
 
 // AddCredential adds a credential to the student and generates a hash
-func (s *Student) AddCredential(credentialType, issuer string, dataIssued time.Time) {
+func (s *Student) AddCredential(credentialType, issuer string, dataIssued time.Time) error {
 	// Create a new credential
 	newCredential := Credential{
 		Type:       credentialType,
@@ -45,11 +51,15 @@ func (s *Student) AddCredential(credentialType, issuer string, dataIssued time.T
 		DataIssued: dataIssued,
 	}
 
+	if err := ValidateCredentialData(newCredential); err != nil {
+		return err // Return the validation error
+	}
 	// Generate and store the credential hash
 	newCredential.Hash = GenerateCredentialHash(newCredential)
 
 	// Add the credential to the student's list of credentials
 	s.Credentials = append(s.Credentials, newCredential)
+	return nil
 }
 
 // UpdateStudentCredentials updates the credentials of the student
