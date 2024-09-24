@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/TsoiEn/Research-Group/Soft_Eng_Research/Blockchain_Core/blockchain"
+	blockchain "github.com/TsoiEn/Research-Group/Soft_Eng_Research/Blockchain_Core/model"
 )
 
 func main() {
