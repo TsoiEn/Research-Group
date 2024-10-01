@@ -42,20 +42,20 @@ func CreateBlock(index int, blockData []byte, prevHash []byte) *Block {
 }
 
 // AddBlock adds a new block with the provided data to the blockchain.
-func (chain *BlockChain) AddBlock(data string, blockData []byte) {
+func (chain *BlockChain) AddBlock(blockData []byte) {
 	prevBlock := chain.Blocks[len(chain.Blocks)-1]
 	newIndex := prevBlock.Index + 1
-	// Use blockData instead of data for the block
+	// Use the previous block's hash as the previous hash for the new block
 	newBlock := CreateBlock(newIndex, blockData, prevBlock.Hash)
 	chain.Blocks = append(chain.Blocks, *newBlock)
 }
 
 // Genesis creates the first block in the blockchain (genesis block).
 func Genesis() *Block {
-	return CreateBlock(0, []byte("Genesis"), []byte{}) // Make sure to pass a []byte for Data
+	return CreateBlock(0, []byte("Genesis Block"), []byte{}) // Initial block with no previous hash
 }
 
 // NewBlockChain creates a new blockchain with the genesis block.
 func NewBlockChain() *BlockChain {
-	return &BlockChain{[]Block{*Genesis()}}
+	return &BlockChain{Blocks: []Block{*Genesis()}}
 }
