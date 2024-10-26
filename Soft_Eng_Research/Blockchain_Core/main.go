@@ -19,9 +19,11 @@ func main() {
 	student.AddCredential("Transcript", "University A", time.Now())
 
 	// Iterate over the student's credentials and add them to the blockchain
+	// Serializing each credential
+	// Add to blockchain
 	for _, cred := range student.Credentials {
-		blockData := cred.Serialize() // Serialize each credential
-		chain.AddBlock(blockData)     // Add to blockchain
+		blockData := cred.Serialize()
+		chain.AddBlock(blockData)
 	}
 
 	// Print out the details of each block in the blockchain

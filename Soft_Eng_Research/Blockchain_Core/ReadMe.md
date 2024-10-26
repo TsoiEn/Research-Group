@@ -24,3 +24,30 @@ This section outlines key algorithms relevant to blockchain technology:
 3. **Block Linking**: Study how blocks are linked together to form a secure chain.
 4. **Transaction Validation**: Learn how transactions are validated and verified within a blockchain network.
 
+
+
+
+# Things to be done
+
+## University Level Credential
+### General
+#### Degree
+**TOR** - Register
+**Diploma** - Register
+#### Certificates
+
+#### Recolection
+**card** - card/e-certificates
+**card** - card/certificate
+
+## Student
+- inclusive year of attendance 2022 - 2026
+ 
+### Course
+- BCS
+- BIT
+
+#### Features
+- Name (First & Last)
+- Age
+- Student number

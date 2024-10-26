@@ -11,21 +11,30 @@ type Student struct {
 	FirstName   string
 	LastName    string
 	Age         int
-	BirthDate   time.Time
+	BirthDate   string
+	StudentNum  int
 	Credentials []Credential
 }
 
 // AddNewStudent creates and returns a new student
-func AddNewStudent(id int, firstName, lastName string, age int, birthDate time.Time) *Student {
+func AddNewStudent(id int, firstName, lastName string, age int, birthDate string, studentNum int) *Student {
 	student := &Student{
 		ID:          id,
 		FirstName:   firstName,
 		LastName:    lastName,
 		Age:         age,
 		BirthDate:   birthDate,
+		StudentNum:  studentNum,
 		Credentials: []Credential{},
 	}
 	return student
+}
+
+func generateStudentNum(studentNum int) {
+	// todo
+	/*
+		current year 2024 + student count
+	*/
 }
 
 // AddCredential adds a credential to the student and generates a hash
