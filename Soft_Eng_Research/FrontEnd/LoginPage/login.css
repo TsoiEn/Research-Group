@@ -34,7 +34,7 @@ body {
     position: relative;
 }
 
-.wrapper h1{
+.upper-wrapper h1{
     font-size: 24px;
 }
 
@@ -54,7 +54,7 @@ body {
     padding: 20px;
 }
 
-.wrapper .input-box {
+.lower-wrapper .input-box {
     position: relative;
     width: 100%;
     height: 50px;
@@ -86,7 +86,7 @@ body {
     font-size: 20px;
 }
 
-.wrapper .btn {
+.lower-wrapper .btn {
     width: 100%;
     height: 45px;
     background: #4aaf51;
@@ -100,20 +100,20 @@ body {
     font-weight: 600;
 }
 
-.wrapper .btn:hover {
+.lower-wrapper .btn:hover {
     color: #555;
 }
 
-.wrapper .options {
+.lower-wrapper .options {
     display: flex;
     justify-content: space-between;
-    font-size: 14.5px;
+    font-size: 16px;
     margin: 15px 0 15px;
     padding-top: 10%
 }
 
 .forgot-password {
-    margin-right: 30px;
+    margin-right: 35%;
 }
 
 .options a {
@@ -122,5 +122,30 @@ body {
 }
 
 .options a:hover {
+    text-decoration: underline;
+}
+
+.lower-wrapper .portal {
+    display: flex;
+    justify-content: space-evenly;
+    font-size: 16px;
+    padding-top: 5%;
+}
+
+.portal .student {
+    color: black;
+    font-weight: bold;
+}
+
+.portal .student:hover {
+    text-decoration: none;
+}
+
+.portal a {
+    color: #555;
+    text-decoration: none;
+}
+
+.portal a:hover {
     text-decoration: underline;
 }
