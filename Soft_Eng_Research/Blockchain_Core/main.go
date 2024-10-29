@@ -12,7 +12,7 @@ func main() {
 	chain := blockchain.NewBlockChain()
 
 	// Add a new student
-	student := blockchain.AddNewStudent(1, "John", "Doe", 21, time.Now())
+	student := blockchain.AddNewStudent(1, "John", "Doe", 21, "Computer Science", 2023)
 
 	// Add credentials to the student
 	student.AddCredential("Degree", "University A", time.Now())

@@ -27,27 +27,29 @@ This section outlines key algorithms relevant to blockchain technology:
 
 
 
-# Things to be done
+## StuCred Blockchain Project: Admin & Student Login
 
-## University Level Credential
-### General
-#### Degree
-**TOR** - Register
-**Diploma** - Register
-#### Certificates
+### Admin Functionality
 
-#### Recolection
-**card** - card/e-certificates
-**card** - card/certificate
+#### Define Credential Types
+- Update `credential.go` to include academic and non-academic credential distinctions.
 
-## Student
-- inclusive year of attendance 2022 - 2026
- 
-### Course
-- BCS
-- BIT
+#### Implement Access Controls in `chaincode.go`
+- Allow admin (developer) to add, update, and delete academic credentials.
+- Restrict admin access to non-academic credentials (students only).
 
-#### Features
-- Name (First & Last)
-- Age
-- Student number
+#### Separate Methods for Each Credential Type in `chaincode.go`
+- Add functions such as `AddAcademicCredential` and `UpdateAcademicCredential` for admin use.
+- Implement `AddNonAcademicCredential` for students to manage their own credentials.
+
+### Student Login
+
+#### Create Mock Login Section
+- Implement student login requiring only `studentID` and `password`.
+- Validate login credentials against mock data.
+
+### Additional Notes
+
+#### Student Profile Information
+- Include `firstName`, `middleName`, `lastName`, `Age`, and `email` in the student profile but not in the login credentials.
+
