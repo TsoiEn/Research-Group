@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"time"
 
 	blockchain "github.com/TsoiEn/Research-Group/Soft_Eng_Research/Blockchain_Core/model"
 )
@@ -43,20 +42,22 @@ func main() {
 		return
 	}
 
-	// Add a new student
-	student := blockchain.AddNewStudent(1, "John", "Doe", 21, "Computer Science", 2023)
+	// ! commented for now
 
-	// Add credentials to the student
-	student.AddCredential("Degree", "University A", time.Now())
-	student.AddCredential("Transcript", "University A", time.Now())
+	// // Add a new student
+	// student := blockchain.AddNewStudent(1, "John", "Doe", 21, "Computer Science", 2023)
+
+	// // Add credentials to the student
+	// student.AddCredential(blockchain.Degree, "University A", time.Now())
+	// student.AddCredential(blockchain.Transcript, "University A", time.Now())
 
 	// Iterate over the student's credentials and add them to the blockchain
 	// Serializing each credential
 	// Add to blockchain
-	for _, cred := range student.Credentials {
-		blockData := cred.Serialize()
-		chain.AddBlock(blockData)
-	}
+	// for _, cred := range student.Credentials {
+	// 	blockData := cred.Serialize()
+	// 	chain.AddBlock(blockData)
+	// }
 
 	// Print out the details of each block in the blockchain
 	for _, block := range chain.Blocks {
