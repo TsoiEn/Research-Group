@@ -3,9 +3,25 @@ package blockchain
 import (
 	"bytes"
 	"crypto/sha256"
+	"encoding/json"
 	"fmt"
 	"time"
 )
+
+// Serialize serializes the credential to a JSON byte slice.
+func (b *Block) Serialize() ([]byte, error) {
+	return json.Marshal(b)
+}
+
+// DeserializeCredential deserializes a JSON byte slice to a Credential.
+func DeserializeCredential(data []byte) (*Credential, error) {
+	var credential Credential
+	err := json.Unmarshal(data, &credential)
+	if err != nil {
+		return nil, err
+	}
+	return &credential, nil
+}
 
 // BlockChain structure contains a slice of blocks.
 type BlockChain struct {
@@ -23,6 +39,7 @@ type Block struct {
 
 // DeriveHash generates a hash for the block using the data and the previous block's hash.
 func (b *Block) DeriveHash() {
+
 	// Concatenate data, previous hash, index, and timestamp
 	info := bytes.Join([][]byte{[]byte(fmt.Sprintf("%d", b.Index)), []byte(b.Timestamp), b.Data, b.PrevHash}, []byte{})
 	hash := sha256.Sum256(info)

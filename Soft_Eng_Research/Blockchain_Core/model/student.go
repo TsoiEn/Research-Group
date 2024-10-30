@@ -30,25 +30,26 @@ func AddNewStudent(id int, firstName, lastName string, age int, birthDate string
 	return student
 }
 
-func generateStudentNum(studentNum int) {
-	// todo
-	/*
-		current year 2024 + student count
-	*/
-}
-
 // AddCredential adds a credential to the student and generates a hash
-func (s *Student) AddCredential(credentialType, issuer string, dataIssued time.Time) error {
+// specifically non-academic
+func (s *Student) AddCredential(credentialType CredentialType, issuer string, dataIssued time.Time) error {
+	// Check if the credential type is non-academic
+	if credentialType != NonAcademic {
+		return fmt.Errorf("only non-academic credentials can be added")
+	}
+
 	// Create a new credential
 	newCredential := Credential{
 		Type:       credentialType,
 		Issuer:     issuer,
-		DataIssued: dataIssued,
+		DateIssued: dataIssued,
 	}
 
+	// Validate the credential data
 	if err := ValidateCredentialData(newCredential); err != nil {
 		return err // Return the validation error
 	}
+
 	// Generate and store the credential hash
 	newCredential.Hash = GenerateCredentialHash(newCredential)
 
@@ -104,6 +105,6 @@ func DeleteCredential(s *Student, cred Credential) {
 // LookupCredentials retrieves and displays all the credentials of the student
 func LookupCredentials(s *Student) {
 	for _, cred := range s.Credentials {
-		fmt.Printf("Credential: %s, Issued by: %s, Issued on: %s\n", cred.Type, cred.Issuer, cred.DataIssued.String())
+		fmt.Printf("Credential: %s, Issued by: %s, Issued on: %s\n", cred.Type, cred.Issuer, cred.DateIssued.String())
 	}
 }
