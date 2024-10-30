@@ -11,6 +11,38 @@ func main() {
 	// Create a new blockchain with the genesis block
 	chain := blockchain.NewBlockChain()
 
+	// mock student log in
+	loginID := 0
+	loginPass := ""
+
+	// mock ui log in section
+	fmt.Print("Student Number: ")
+	fmt.Scanln(&loginID)
+	fmt.Print("Password: ")
+	fmt.Scanln(&loginPass)
+
+	// Mock student login data
+	students := map[int]string{
+		202533282: "zpKVM4cQ",
+		202403450: "S2oS6gQP",
+		202209675: "WXwoXDA9",
+		202433194: "uOlgXCpt",
+		202226488: "TOTVufqI",
+	}
+
+	// Check if the login ID exists and the password matches
+	if pass, exists := students[loginID]; exists {
+		if pass == loginPass {
+			fmt.Println("Login successful!")
+		} else {
+			fmt.Println("Invalid password.")
+			return
+		}
+	} else {
+		fmt.Println("Student ID not found.")
+		return
+	}
+
 	// Add a new student
 	student := blockchain.AddNewStudent(1, "John", "Doe", 21, "Computer Science", 2023)
 
