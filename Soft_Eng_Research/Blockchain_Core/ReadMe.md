@@ -31,7 +31,7 @@ This section outlines key algorithms relevant to blockchain technology:
 
 ### Admin Functionality
 
-#### Define Credential Types
+#### Define Credential Types (finished?)
 - Update `credential.go` to include academic and non-academic credential distinctions.
 
 #### Implement Access Controls in `chaincode.go`
