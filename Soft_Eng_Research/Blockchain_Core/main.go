@@ -2,31 +2,42 @@ package main
 
 import (
 	"fmt"
+	"log"
 
-	blockchain "github.com/TsoiEn/Research-Group/Soft_Eng_Research/Blockchain_Core/model"
+	"github.com/TsoiEn/Research-Group/Soft_Eng_Research/Blockchain_Core/chaincode"
+	"github.com/hyperledger/fabric-contract-api-go/contractapi"
 )
 
+type MockTransactionContext struct {
+	contractapi.TransactionContextInterface
+}
+
+func (m *MockTransactionContext) GetStub() *contractapi.TransactionContextInterface {
+	// Return a mock stub if needed
+	return nil
+}
+
 func main() {
-	// Create a new blockchain with the genesis block
-	chain := blockchain.NewBlockChain()
+	// Create a new chaincode instance
+	cc := new(chaincode.Chaincode)
 
-	// mock student log in
-	loginID := 0
-	loginPass := ""
+	// Mock student login
+	var loginID string
+	var loginPass string
 
-	// mock ui log in section
+	// Mock UI login section
 	fmt.Print("Student Number: ")
 	fmt.Scanln(&loginID)
 	fmt.Print("Password: ")
 	fmt.Scanln(&loginPass)
 
 	// Mock student login data
-	students := map[int]string{
-		202533282: "zpKVM4cQ",
-		202403450: "S2oS6gQP",
-		202209675: "WXwoXDA9",
-		202433194: "uOlgXCpt",
-		202226488: "TOTVufqI",
+	students := map[string]string{
+		"202533282": "zpKVM4cQ",
+		"202403450": "S2oS6gQP",
+		"202209675": "WXwoXDA9",
+		"202433194": "uOlgXCpt",
+		"202226488": "TOTVufqI",
 	}
 
 	// Check if the login ID exists and the password matches
@@ -42,30 +53,37 @@ func main() {
 		return
 	}
 
-	// ! commented for now
+	// Create a mock transaction context
+	mockCtx := &MockTransactionContext{}
 
-	// // Add a new student
-	// student := blockchain.AddNewStudent(1, "John", "Doe", 21, "Computer Science", 2023)
+	// Simulated credential data
+	credentialData := "Degree in Computer Science"
 
-	// // Add credentials to the student
-	// student.AddCredential(blockchain.Degree, "University A", time.Now())
-	// student.AddCredential(blockchain.Transcript, "University A", time.Now())
+	// Mock updating a credential
+	if err := cc.UpdateCredential(mockCtx, loginID, credentialData); err != nil {
+		log.Fatalf("Failed to update credential: %v", err)
+	}
 
-	// Iterate over the student's credentials and add them to the blockchain
-	// Serializing each credential
-	// Add to blockchain
-	// for _, cred := range student.Credentials {
-	// 	blockData := cred.Serialize()
-	// 	chain.AddBlock(blockData)
-	// }
+	// Mock verifying a credential
+	isValid, err := cc.VerifyCredential(mockCtx, loginID, credentialData)
+	if err != nil {
+		log.Fatalf("Failed to verify credential: %v", err)
+	}
+	if isValid {
+		fmt.Println("Credential is valid.")
+	} else {
+		fmt.Println("Credential is not valid.")
+	}
 
-	// Print out the details of each block in the blockchain
-	for _, block := range chain.Blocks {
-		fmt.Printf("Index: %d\n", block.Index)
-		fmt.Printf("Timestamp: %s\n", block.Timestamp)
-		fmt.Printf("Previous Hash: %x\n", block.PrevHash)
-		fmt.Printf("Data in the block: %s\n", block.Data)
-		fmt.Printf("Hash: %x\n", block.Hash)
-		fmt.Println()
+	// Mock retrieving credentials
+	credentials, err := cc.RetrieveCredential(mockCtx, loginID)
+	if err != nil {
+		log.Fatalf("Failed to retrieve credentials: %v", err)
+	}
+
+	// Print out the retrieved credentials
+	fmt.Printf("Credentials for student %s:\n", loginID)
+	for _, cred := range credentials {
+		fmt.Println(cred)
 	}
 }
