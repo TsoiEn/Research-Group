@@ -21,7 +21,7 @@ type Chaincode struct {
 }
 
 // CRUD operations for Student
-
+// updated addstudent
 func (c *Chaincode) AddStudent(ctx contractapi.TransactionContextInterface, student Student) error {
 	exist, err := c.StudentExists(ctx, student.ID)
 	if err != nil {
