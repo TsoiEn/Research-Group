@@ -21,12 +21,10 @@ type Chaincode struct {
 	contractapi.Contract
 }
 
-<<<<<<< HEAD:Soft_Eng_Research/Blockchain_Core/chaincode/chaincode.go
 // Credential Handling Functions
 
-// * Verifies if a given credential for a student is valid by checking if it matches any stored credential hashes.
+// Verifies if a given credential for a student is valid by checking if it matches any stored credential hashes.
 func (c *Chaincode) VerifyCredential(ctx contractapi.TransactionContextInterface, studentID string, credentialData string) (bool, error) {
-
 	// Retrieve the student from the blockchain
 	_, err := c.ReadStudent(ctx, studentID)
 	if err != nil {
@@ -41,11 +39,13 @@ func (c *Chaincode) VerifyCredential(ctx contractapi.TransactionContextInterface
 	if err != nil {
 		return false, err
 	}
+	if storedCredentials == nil {
+		return false, fmt.Errorf("no credentials found for student %s", studentID)
+	}
 
 	// Unmarshal stored credentials
 	var credentials []string
-	err = json.Unmarshal(storedCredentials, &credentials)
-	if err != nil {
+	if err = json.Unmarshal(storedCredentials, &credentials); err != nil {
 		return false, err
 	}
 
@@ -59,16 +59,13 @@ func (c *Chaincode) VerifyCredential(ctx contractapi.TransactionContextInterface
 	return false, fmt.Errorf("credential is not valid")
 }
 
+// Hashes the credential data
 func hashCredential(credentialData string) string {
-	// Implement your hashing logic here, e.g., using SHA-256
-	// This is a placeholder implementation
 	return fmt.Sprintf("%x", sha256.Sum256([]byte(credentialData)))
-
 }
 
-// * Allows the admin to update a specific credential for a student, either by modifying the credential’s properties or adding new credentials, depending on project needs.
+// Allows the admin to update a specific credential for a student, either by modifying the credential’s properties or adding new credentials, depending on project needs.
 func (c *Chaincode) UpdateCredential(ctx contractapi.TransactionContextInterface, studentID string, credentialData string) error {
-
 	// Check if the student exists
 	exists, err := c.StudentExists(ctx, studentID)
 	if err != nil {
@@ -83,12 +80,6 @@ func (c *Chaincode) UpdateCredential(ctx contractapi.TransactionContextInterface
 
 	// Retrieve stored credentials for the student
 	storedCredentials, err := ctx.GetStub().GetState(studentID + "_credentials")
-=======
-// CRUD operations for Student
-// updated addstudent
-func (c *Chaincode) AddStudent(ctx contractapi.TransactionContextInterface, student Student) error {
-	exist, err := c.StudentExists(ctx, student.ID)
->>>>>>> main:Soft_Eng_Research/Blockchain_Core/chaincode/src/chaincode.go
 	if err != nil {
 		return err
 	}
@@ -96,8 +87,7 @@ func (c *Chaincode) AddStudent(ctx contractapi.TransactionContextInterface, stud
 	// Unmarshal stored credentials
 	var credentials []string
 	if storedCredentials != nil {
-		err = json.Unmarshal(storedCredentials, &credentials)
-		if err != nil {
+		if err = json.Unmarshal(storedCredentials, &credentials); err != nil {
 			return err
 		}
 	}
@@ -113,12 +103,10 @@ func (c *Chaincode) AddStudent(ctx contractapi.TransactionContextInterface, stud
 
 	// Save the updated credentials back to the blockchain
 	return ctx.GetStub().PutState(studentID+"_credentials", updatedCredentials)
-
 }
 
-// * Retrieves all credentials associated with a specific student ID from the blockchain.
+// Retrieves all credentials associated with a specific student ID from the blockchain.
 func (c *Chaincode) RetrieveCredential(ctx contractapi.TransactionContextInterface, studentID string) ([]string, error) {
-
 	// Check if the student exists
 	exists, err := c.StudentExists(ctx, studentID)
 	if err != nil {
@@ -145,7 +133,6 @@ func (c *Chaincode) RetrieveCredential(ctx contractapi.TransactionContextInterfa
 	}
 
 	return credentials, nil
-
 }
 
 func (c *Chaincode) ReadStudent(ctx contractapi.TransactionContextInterface, studentID string) (*Student, error) {
@@ -166,7 +153,6 @@ func (c *Chaincode) ReadStudent(ctx contractapi.TransactionContextInterface, stu
 	return &student, nil
 }
 
-// TODO: To be Update
 func (c *Chaincode) StudentExists(ctx contractapi.TransactionContextInterface, studentID string) (bool, error) {
 	studentJSON, err := ctx.GetStub().GetState(studentID)
 	if err != nil {
@@ -176,7 +162,7 @@ func (c *Chaincode) StudentExists(ctx contractapi.TransactionContextInterface, s
 	return studentJSON != nil, nil
 }
 
-// TODO: To be Update
+// UpdateStudent allows the admin to update a student's details
 func (c *Chaincode) UpdateStudent(ctx contractapi.TransactionContextInterface, student Student) error {
 	exist, err := c.StudentExists(ctx, student.ID)
 	if err != nil {
@@ -187,14 +173,7 @@ func (c *Chaincode) UpdateStudent(ctx contractapi.TransactionContextInterface, s
 		return fmt.Errorf("the student %s does not exist", student.ID)
 	}
 
-	Stnd := &Student{
-		ID:        student.ID,
-		FirstName: student.FirstName,
-		LastName:  student.LastName,
-		Age:       student.Age,
-		BirthDate: student.BirthDate,
-	}
-	studentJSON, err := json.Marshal(Stnd)
+	studentJSON, err := json.Marshal(student)
 	if err != nil {
 		return err
 	}
@@ -202,8 +181,7 @@ func (c *Chaincode) UpdateStudent(ctx contractapi.TransactionContextInterface, s
 	return ctx.GetStub().PutState(student.ID, studentJSON)
 }
 
-// * separate modethod for each credential type and adding and updating for admin and student
-// * Allows the admin to add academic credentials for a specific student.
+// AddAcademicCredential allows the admin to add academic credentials for a specific student.
 func (c *Chaincode) AddAcademicCredential(ctx contractapi.TransactionContextInterface, studentID string, credentialData string) error {
 	// Check if the student exists
 	exists, err := c.StudentExists(ctx, studentID)
@@ -232,6 +210,13 @@ func (c *Chaincode) AddAcademicCredential(ctx contractapi.TransactionContextInte
 		}
 	}
 
+	// Check if the credential already exists, to avoid duplicates
+	for _, existing := range credentials {
+		if existing == hashedCredential {
+			return fmt.Errorf("the credential already exists for student %s", studentID)
+		}
+	}
+
 	// Add the new hashed academic credential to the list
 	credentials = append(credentials, hashedCredential)
 
@@ -245,7 +230,7 @@ func (c *Chaincode) AddAcademicCredential(ctx contractapi.TransactionContextInte
 	return ctx.GetStub().PutState(studentID+"_academic_credentials", updatedCredentials)
 }
 
-// * Allows the admin to update existing academic credentials for a specific student.
+// UpdateAcademicCredential allows the admin to update existing academic credentials for a specific student.
 func (c *Chaincode) UpdateAcademicCredential(ctx contractapi.TransactionContextInterface, studentID string, oldCredentialData string, newCredentialData string) error {
 	// Check if the student exists
 	exists, err := c.StudentExists(ctx, studentID)
@@ -275,12 +260,19 @@ func (c *Chaincode) UpdateAcademicCredential(ctx contractapi.TransactionContextI
 		}
 	}
 
-	// Check if the old credential exists and replace it with the new one
+	// Check if the old credential exists
+	updated := false
 	for i, storedHash := range credentials {
 		if storedHash == hashedOldCredential {
+			// Replace with new credential
 			credentials[i] = hashedNewCredential
+			updated = true
 			break
 		}
+	}
+
+	if !updated {
+		return fmt.Errorf("old credential not found for student %s", studentID)
 	}
 
 	// Marshal the updated credentials
@@ -293,7 +285,7 @@ func (c *Chaincode) UpdateAcademicCredential(ctx contractapi.TransactionContextI
 	return ctx.GetStub().PutState(studentID+"_academic_credentials", updatedCredentials)
 }
 
-// * Allows students to add non-academic credentials for themselves.
+// AddNonAcademicCredential allows students to add non-academic credentials for themselves.
 func (c *Chaincode) AddNonAcademicCredential(ctx contractapi.TransactionContextInterface, studentID string, credentialData string) error {
 	// Check if the student exists
 	exists, err := c.StudentExists(ctx, studentID)
