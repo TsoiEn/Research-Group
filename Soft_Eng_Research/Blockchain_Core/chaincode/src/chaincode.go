@@ -21,6 +21,7 @@ type Chaincode struct {
 	contractapi.Contract
 }
 
+<<<<<<< HEAD:Soft_Eng_Research/Blockchain_Core/chaincode/chaincode.go
 // Credential Handling Functions
 
 // * Verifies if a given credential for a student is valid by checking if it matches any stored credential hashes.
@@ -82,6 +83,12 @@ func (c *Chaincode) UpdateCredential(ctx contractapi.TransactionContextInterface
 
 	// Retrieve stored credentials for the student
 	storedCredentials, err := ctx.GetStub().GetState(studentID + "_credentials")
+=======
+// CRUD operations for Student
+// updated addstudent
+func (c *Chaincode) AddStudent(ctx contractapi.TransactionContextInterface, student Student) error {
+	exist, err := c.StudentExists(ctx, student.ID)
+>>>>>>> main:Soft_Eng_Research/Blockchain_Core/chaincode/src/chaincode.go
 	if err != nil {
 		return err
 	}
