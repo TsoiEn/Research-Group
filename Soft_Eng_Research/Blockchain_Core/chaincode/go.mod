@@ -2,8 +2,10 @@ module github.com/TsoiEn/Research-Group/Soft_Eng_Research/Blockchain_Core
 
 go 1.23.1
 
-require github.com/hyperledger/fabric-contract-api-go v1.2.2
-
+require (
+	github.com/hyperledger/fabric-contract-api-go v2.0.0
+	github.com/hyperledger/fabric-chaincode-go v2.5.9
+)
 require (
 	github.com/go-openapi/jsonpointer v0.21.0 // indirect
 	github.com/go-openapi/jsonreference v0.21.0 // indirect
