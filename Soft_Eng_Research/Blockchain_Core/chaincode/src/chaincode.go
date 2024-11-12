@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 
+	model "github.com/TsoiEn/Research-Group/Soft_Eng_Research/Blockchain_Core/chaincode/model"
 	"github.com/hyperledger/fabric-contract-api-go/contractapi"
 )
 
@@ -16,9 +17,13 @@ func (s *SmartContract) InitLedger(ctx contractapi.TransactionContextInterface) 
 }
 
 func (s *SmartContract) CreateBlock(ctx contractapi.TransactionContextInterface, blockData string) error {
-	block := model.NewBlock(blockData)
+	block := model.CreateBlock(1, []byte(blockData), []byte("previousHash"))
 	// Code to add block to the ledger
-	return ctx.GetStub().PutState(block.Hash, block.Serialize())
+	serializedBlock, err := block.Serialize()
+	if err != nil {
+		return fmt.Errorf("failed to serialize block: %v", err)
+	}
+	return ctx.GetStub().PutState(string(block.Hash), serializedBlock)
 }
 
 func main() {

@@ -1,4 +1,4 @@
-package blockchain
+package model
 
 import (
 	"bytes"
@@ -7,31 +7,28 @@ import (
 )
 
 type Student struct {
-	ID          int
-	FirstName   string
-	LastName    string
+	StudentID   int    `json:"student_id"`
+	LastName    string `json:"last_name"`
+	FirstName   string `json:"first_name"`
 	Age         int
-	BirthDate   string
-	StudentNum  int
-	Credentials []Credential
+	BirthDate   string        `json:"birth_date"`
+	Credentials []*Credential `json:"credentials,omitempty"`
 }
 
 // AddNewStudent creates and returns a new student
 func AddNewStudent(id int, firstName, lastName string, age int, birthDate string, studentNum int) *Student {
 	student := &Student{
-		ID:          id,
+		StudentID:   id,
 		FirstName:   firstName,
 		LastName:    lastName,
 		Age:         age,
 		BirthDate:   birthDate,
-		StudentNum:  studentNum,
-		Credentials: []Credential{},
+		Credentials: []*Credential{},
 	}
 	return student
 }
 
-// AddCredential adds a credential to the student and generates a hash
-// specifically non-academic
+// AddCredential adds a new credential to the student's list
 func (s *Student) AddCredential(credentialType CredentialType, issuer string, dataIssued time.Time) error {
 	// Check if the credential type is non-academic
 	if credentialType != NonAcademic {
@@ -47,14 +44,14 @@ func (s *Student) AddCredential(credentialType CredentialType, issuer string, da
 
 	// Validate the credential data
 	if err := ValidateCredentialData(newCredential); err != nil {
-		return err // Return the validation error
+		return err
 	}
 
 	// Generate and store the credential hash
 	newCredential.Hash = GenerateCredentialHash(newCredential)
 
 	// Add the credential to the student's list of credentials
-	s.Credentials = append(s.Credentials, newCredential)
+	s.Credentials = append(s.Credentials, &newCredential)
 	return nil
 }
 
@@ -73,7 +70,7 @@ func UpdateStudentCredentials(id int, newCredential Credential) error {
 	}
 
 	// Add new credential
-	student.Credentials = append(student.Credentials, newCredential)
+	student.Credentials = append(student.Credentials, &newCredential)
 	// Return successfully
 	return nil
 }
@@ -84,7 +81,7 @@ func FindStudentByID(id int) (*Student, error) {
 	// For now, return nil and an error to avoid compilation issues
 	Students := []*Student{}
 	for _, student := range Students {
-		if student.ID == id {
+		if student.StudentID == id {
 			return student, nil
 		}
 	}

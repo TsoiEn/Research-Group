@@ -1,4 +1,4 @@
-module github.com/TsoiEn/Research-Group/Soft_Eng_Research/Blockchain_Core
+module github.com/TsoiEn/Research-Group/Soft_Eng_Research/Blockchain_Core/chaincode
 
 go 1.22.4
 
