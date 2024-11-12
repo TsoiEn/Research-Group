@@ -78,27 +78,6 @@ blockchain/
 │   │   │   ├── admin.go         # Optional, for admin-specific features
 │   │   ├── go.mod               # Module dependencies specific to chaincode
 │   │   ├── go.sum               # Dependency checksum file
-├── main.go                      # Used for testing but not part of the deployed chaincode
-├── fabric-config/               # Network configuration files
-│   ├── configtx.yaml            # Channel and orderer configurations
-│   ├── crypto-config.yaml       # Crypto material generation definition
-│   ├── docker-compose.yaml      # Docker orchestration for Fabric network
-│   ├── genesis.block            # Genesis block for the orderer
-│   ├── mychannel.tx             # Channel creation transaction file
-├── crypto-config/               # Generated crypto material (certificates and keys)
-│   ├── ordererOrganizations/
-│   ├── peerOrganizations/
-├── orderers/                    # Orderer-specific configurations
-│   ├── orderer1/
-│   │   ├── orderer.yaml         # Configuration specific to orderer1
-│   │   ├── crypto/              # Crypto material for orderer1
-│   ├── orderer2/
-│   │   ├── orderer.yaml         # Configuration specific to orderer2
-│   │   ├── crypto/              # Crypto material for orderer2
-├── tools/                       # Optional tools (CouchDB, Explorer, etc.)
-│   ├── couchdb/
-│   ├── explorer/
-│   │   ├── config.json
-├── other_project_files/         # Directory for other project files, scripts, or configuration
+
 
 
