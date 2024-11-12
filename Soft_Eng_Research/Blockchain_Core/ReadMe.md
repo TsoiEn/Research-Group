@@ -78,6 +78,5 @@ blockchain/
 │   │   │   ├── admin.go         # Optional, for admin-specific features
 │   │   ├── go.mod               # Module dependencies specific to chaincode
 │   │   ├── go.sum               # Dependency checksum file
-
-
+├── main.go                      # Used for testing but not 
 

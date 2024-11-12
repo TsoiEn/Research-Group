@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 
+	"github.com/TsoiEn/Research-Group/Soft_Eng_Research/Blockchain_Core/chaincode/model"
 	"github.com/hyperledger/fabric-contract-api-go/contractapi"
 )
 
