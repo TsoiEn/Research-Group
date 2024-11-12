@@ -1,4 +1,4 @@
-package blockchain
+package model
 
 import (
 	"bytes"
@@ -10,6 +10,7 @@ import (
 
 type CredentialType int
 
+// CredentialType enumeration
 const (
 	Academic CredentialType = iota
 	NonAcademic
@@ -17,6 +18,7 @@ const (
 	Diploma
 )
 
+// String returns the string representation of the CredentialType
 func (ct CredentialType) String() string {
 	return [...]string{"Academic", "NonAcademic", "Certificate", "Diploma"}[ct]
 }
@@ -27,6 +29,12 @@ type Credential struct {
 	Issuer     string         // Issuer of the credential (e.g., university, organization)
 	DateIssued time.Time      // Date when the credential was issued
 	Hash       []byte         // Hash of the credential data for verification
+	PrevHash   []byte         // Hash of the previous credential
+}
+
+// CredentialChain represents a chain of credentials
+type CredentialChain struct {
+	Credentials []Credential
 }
 
 // Serialize converts the Credential to a custom byte array format
