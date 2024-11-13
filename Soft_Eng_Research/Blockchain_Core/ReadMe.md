@@ -20,10 +20,16 @@ blockchain/
 │   │   │   ├── admin.go
 │   │   │   ├── credential.go
 │   │   │   ├── student.go
-│   │   │   ├── admin.go         # Optional, for admin-specific features
+│   │   │   ├── utils.go         # Optional utility functions
 │   │   ├── go.mod               # Module dependencies specific to chaincode
-│   │   ├── go.sum               # Dependency checksum file
-├── main.go                      # Used for testing but 
+│   │   ├── go.sum
+├── consensus/                  # Raft-related files
+│   ├── raft.go                 # Main Raft logic
+│   ├── raft_node.go            # Raft node management
+│   ├── raft_helpers.go         # Helper functions for Raft
+│   └── raft_config.go          # Raft configuration setup
+├── api/
+                  # Used for testing but 
 
 
 ### admin.go responsibilities
