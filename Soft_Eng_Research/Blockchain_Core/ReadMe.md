@@ -17,12 +17,13 @@ blockchain/
 │   │   ├── chaincode.go         # Main chaincode logic
 │   │   ├── model/
 │   │   │   ├── block.go         # Model files as dependencies
+│   │   │   ├── admin.go
 │   │   │   ├── credential.go
 │   │   │   ├── student.go
 │   │   │   ├── admin.go         # Optional, for admin-specific features
 │   │   ├── go.mod               # Module dependencies specific to chaincode
 │   │   ├── go.sum               # Dependency checksum file
-├── main.go                      # Used for testing but not 
+├── main.go                      # Used for testing but 
 
 
 ### admin.go responsibilities
@@ -43,3 +44,34 @@ blockchain/
 
 ### chaincode.go 
 - is the main entry point where chaincode logic interacts with the blockchain.
+
+
+
+### API Integration
+
+To connect the frontend and backend, you should create a new directory for your API within the `blockchain/` directory. Here is a suggested structure:
+
+```
+blockchain/
+├── chaincode/
+│   ├── src/
+│   │   ├── chaincode.go         # Main chaincode logic
+│   │   ├── model/
+│   │   │   ├── block.go         # Model files as dependencies
+│   │   │   ├── admin.go
+│   │   │   ├── credential.go
+│   │   │   ├── student.go
+│   │   │   ├── admin.go         # Optional, for admin-specific features
+│   │   ├── go.mod               # Module dependencies specific to chaincode
+│   │   ├── go.sum               # Dependency checksum file
+├── api/                         # New directory for API
+│   ├── main.go                  # Entry point for the API server
+│   ├── handlers/
+│   │   ├── studentHandler.go    # Handlers for student-related API endpoints
+│   │   ├── adminHandler.go      # Handlers for admin-related API endpoints
+│   ├── router.go                # Router configuration
+│   ├── go.mod                   # Module dependencies for the API
+│   ├── go.sum                   # Dependency checksum file
+```
+
+This structure keeps your API logic separate from your chaincode logic, making it easier to manage and maintain.

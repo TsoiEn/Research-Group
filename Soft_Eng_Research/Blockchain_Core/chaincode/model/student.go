@@ -15,20 +15,7 @@ type Student struct {
 	Credentials []*Credential `json:"credentials,omitempty"`
 }
 
-// AddNewStudent creates and returns a new student
-func AddNewStudent(id int, firstName, lastName string, age int, birthDate string, studentNum int) *Student {
-	student := &Student{
-		StudentID:   id,
-		FirstName:   firstName,
-		LastName:    lastName,
-		Age:         age,
-		BirthDate:   birthDate,
-		Credentials: []*Credential{},
-	}
-	return student
-}
-
-// AddCredential adds a new credential to the student's list
+// AddCredential adds a new credential to the student's list of non-academic credentials
 func (s *Student) AddCredential(credentialType CredentialType, issuer string, dataIssued time.Time) error {
 	// Check if the credential type is non-academic
 	if credentialType != NonAcademic {
@@ -48,7 +35,7 @@ func (s *Student) AddCredential(credentialType CredentialType, issuer string, da
 	}
 
 	// Generate and store the credential hash
-	newCredential.Hash = GenerateCredentialHash(newCredential)
+	newCredential.Hash = GenerateCredentialHash(&newCredential)
 
 	// Add the credential to the student's list of credentials
 	s.Credentials = append(s.Credentials, &newCredential)
@@ -89,19 +76,3 @@ func FindStudentByID(id int) (*Student, error) {
 }
 
 // DeleteCredential removes a credential from the student's list
-func DeleteCredential(s *Student, cred Credential) {
-	for i, storedCred := range s.Credentials {
-		// Correct comparison using bytes.Equal
-		if bytes.Equal(storedCred.Hash, cred.Hash) {
-			s.Credentials = append(s.Credentials[:i], s.Credentials[i+1:]...)
-			break
-		}
-	}
-}
-
-// LookupCredentials retrieves and displays all the credentials of the student
-func LookupCredentials(s *Student) {
-	for _, cred := range s.Credentials {
-		fmt.Printf("Credential: %s, Issued by: %s, Issued on: %s\n", cred.Type, cred.Issuer, cred.DateIssued.String())
-	}
-}
