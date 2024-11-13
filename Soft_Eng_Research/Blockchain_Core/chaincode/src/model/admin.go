@@ -11,7 +11,7 @@ type Admin struct {
 	Name    string `json:"name"`
 }
 
-func (a *Admin) AddNewStudent(id int, firstName, lastName string, age int, birthDate string, studentNum int) *Student {
+func (a *Admin) AddNewStudent(id int, firstName, lastName string, age int, birthDate time.Time, studentNum int, chain *StudentChain) *Student {
 	student := &Student{
 		StudentID:   id,
 		FirstName:   firstName,
@@ -20,14 +20,18 @@ func (a *Admin) AddNewStudent(id int, firstName, lastName string, age int, birth
 		BirthDate:   birthDate,
 		Credentials: []*Credential{},
 	}
+
+	// Add the student to the StudentChain
+	chain.Students = append(chain.Students, student)
+
 	return student
 }
 
 // AddCredentialAdmin adds a new academic credential to the student's list of academic credentials
-func (a *Admin) AddCredentialAdmin(s *Student, credentialType CredentialType, issuer string, dataIssued time.Time) error {
+func (a *Admin) AddCredentialAdmin(s *Student, credentialType CredentialType, issuer string, dataIssued time.Time) bool {
 	// Check if the credential type is academic
 	if credentialType != Academic {
-		return fmt.Errorf("only academic credentials can be added")
+		return false //fmt.Errorf("only academic credentials can be added")
 	}
 
 	// Create a new credential
@@ -39,15 +43,15 @@ func (a *Admin) AddCredentialAdmin(s *Student, credentialType CredentialType, is
 
 	// Validate the credential data
 	if err := ValidateCredentialData(newCredential); err != nil {
-		return err
+		return false
 	}
 
 	// Generate and store the credential hash
-	newCredential.Hash = GenerateCredentialHash(newCredential)
+	newCredential.Hash = GenerateCredentialHash(&newCredential)
 
 	// Add the credential to the student's list of credentials
 	s.Credentials = append(s.Credentials, &newCredential)
-	return nil
+	return true
 }
 
 // RevokeCredential revokes a credential of the student
