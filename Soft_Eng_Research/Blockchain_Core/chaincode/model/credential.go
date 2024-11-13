@@ -2,7 +2,6 @@ package model
 
 import (
 	"bytes"
-	"crypto/sha256"
 	"fmt"
 	"log"
 	"time"
@@ -24,12 +23,13 @@ func (ct CredentialType) String() string {
 }
 
 type Credential struct {
-	ID         string         // Unique identifier for the credential
-	Type       CredentialType // Type of the credential (Academic or NonAcademic)
-	Issuer     string         // Issuer of the credential (e.g., university, organization)
-	DateIssued time.Time      // Date when the credential was issued
-	Hash       []byte         // Hash of the credential data for verification
-	PrevHash   []byte         // Hash of the previous credential
+	ID         string         `json:"id"`
+	Type       CredentialType `json:"type"`
+	Issuer     string         `json:"issuer"`
+	DateIssued time.Time      `json:"date_issued"`
+	Hash       []byte         `json:"hash"`
+	PrevHash   []byte         `json:"prev_hash"`
+	Status     string         `json:"status"`
 }
 
 // CredentialChain represents a chain of credentials
@@ -37,14 +37,9 @@ type CredentialChain struct {
 	Credentials []Credential
 }
 
-// Serialize converts the Credential to a custom byte array format
-func (cred Credential) Serialize() []byte {
-	return []byte(fmt.Sprintf("%d|%s|%s|%s", cred.Type, cred.Issuer, cred.ID, cred.DateIssued.Format(time.RFC3339)))
-}
-
 // VerifyCredential checks if a credential is valid by comparing its hash
 func (cred *Credential) VerifyCredential(s *Student) bool {
-	expectedHash := GenerateCredentialHash(*cred)
+	expectedHash := GenerateCredentialHash(cred)
 	for _, storedCred := range s.Credentials {
 		if bytes.Equal(storedCred.Hash, expectedHash) {
 			return true
@@ -52,13 +47,6 @@ func (cred *Credential) VerifyCredential(s *Student) bool {
 	}
 	log.Println("Credential verification failed")
 	return false
-}
-
-// GenerateCredentialHash creates a hash of the credential data for integrity
-func GenerateCredentialHash(cred Credential) []byte {
-	credData := fmt.Sprintf("%d|%s|%s|%s", cred.Type, cred.Issuer, cred.ID, cred.DateIssued.String())
-	hash := sha256.Sum256([]byte(credData))
-	return hash[:]
 }
 
 // ValidateCredentialData checks the validity of the credential fields
@@ -73,4 +61,11 @@ func ValidateCredentialData(cred Credential) error {
 		return fmt.Errorf("issued date cannot be in the future")
 	}
 	return nil
+}
+
+func LookupCredentials(s *Student) {
+	for _, cred := range s.Credentials {
+		fmt.Printf("Credential: %s, Issued by: %s, Issued on: %s, Status: %s\n",
+			cred.Type, cred.Issuer, cred.DateIssued.String(), cred.Status)
+	}
 }
