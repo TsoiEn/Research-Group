@@ -1,9 +1,8 @@
-package raft
+package consensus
 
 import (
 	"fmt"
 	"log"
-	"net"
 	"net/rpc"
 	"sync"
 	"time"
@@ -60,36 +59,6 @@ type RequestVoteReply struct {
 	VoteGranted bool
 }
 
-func NewRaftNode(id string, timeout time.Duration, heartbeatTimeout time.Duration) *RaftNode {
-	node := &RaftNode{
-		id:               id,
-		state:            "follower",
-		term:             0,
-		log:              make([]LogEntry, 0),
-		commitIndex:      0,
-		lastApplied:      0,
-		nextIndex:        make(map[string]int),
-		matchIndex:       make(map[string]int),
-		timeout:          timeout,
-		heartbeatTimeout: heartbeatTimeout,
-		heartbeatTimer:   time.NewTimer(heartbeatTimeout),
-		electionTimer:    time.NewTimer(timeout),
-		votedFor:         "",
-		votesReceived:    0,
-	}
-	return node
-}
-
-func (node *RaftNode) Start() {
-	go node.electionTimeout()
-	rpc.Register(node)
-	listener, err := net.Listen("tcp", ":0") // Use appropriate address.
-	if err != nil {
-		log.Fatal("Failed to start RPC server: ", err)
-	}
-	go rpc.Accept(listener)
-}
-
 func (node *RaftNode) waitForElectionResult() {
 	votesReceived := 1
 
@@ -97,7 +66,7 @@ func (node *RaftNode) waitForElectionResult() {
 		select {
 		case <-node.heartbeatTimer.C:
 			fmt.Println("Heartbeat timeout")
-			node.startElection()
+			node.StartElection()
 			return
 		default:
 			if votesReceived > len(node.nextIndex)/2 {
@@ -182,36 +151,75 @@ func (node *RaftNode) electionTimeout() {
 		node.votedFor = node.id
 		node.votesReceived = 1
 		node.mu.Unlock()
-		node.startElection()
+		node.StartElection()
 	}
 }
 
-func (node *RaftNode) startElection() {
-	fmt.Println("Starting election...")
+func (node *RaftNode) StartElection() {
+	fmt.Printf("%s is starting an election for term %d\n", node.id, node.term)
+	node.votesReceived = 1 // Node votes for itself
+
+	var wg sync.WaitGroup
+	var mu sync.Mutex
+
 	for _, peer := range node.peers {
+		wg.Add(1)
 		go func(peer string) {
+			defer wg.Done()
 			args := &RequestVoteArgs{
 				Term:         node.term,
 				CandidateID:  node.id,
 				LastLogIndex: len(node.log) - 1,
-				LastLogTerm:  node.log[len(node.log)-1].term,
+				LastLogTerm:  node.getLastLogTerm(),
 			}
 			reply := &RequestVoteReply{}
+
 			client, err := rpc.Dial("tcp", peer)
 			if err != nil {
-				log.Println("Error connecting to peer", peer, ":", err)
+				log.Printf("Failed to connect to peer %s: %v\n", peer, err)
 				return
 			}
 			defer client.Close()
+
 			err = client.Call("RaftNode.RequestVote", args, reply)
 			if err != nil {
-				log.Println("RPC failed:", err)
+				log.Printf("Error during RequestVote RPC to %s: %v\n", peer, err)
 				return
 			}
-			node.RequestVoteResponse(reply.VoteGranted)
+
+			mu.Lock()
+			defer mu.Unlock()
+			if reply.VoteGranted {
+				node.votesReceived++
+				if node.votesReceived > len(node.peers)/2 {
+					fmt.Printf("%s became the leader for term %d\n", node.id, node.term)
+					node.mu.Lock()
+					node.state = "leader"
+					node.leaderID = node.id
+					node.mu.Unlock()
+					node.heartbeat()
+				}
+			} else if reply.Term > node.term {
+				node.mu.Lock()
+				node.term = reply.Term
+				node.state = "follower"
+				node.votedFor = ""
+				node.mu.Unlock()
+				node.electionTimer.Reset(node.timeout)
+			}
 		}(peer)
 	}
-	node.waitForElectionResult()
+
+	// Wait for responses from all peers before ending the election.
+	wg.Wait()
+	go node.waitForElectionResult()
+}
+
+func (node *RaftNode) getLastLogTerm() int {
+	if len(node.log) == 0 {
+		return 0
+	}
+	return node.log[len(node.log)-1].term
 }
 
 func (node *RaftNode) RequestVoteResponse(voteGranted bool) {
@@ -227,12 +235,12 @@ func (node *RaftNode) RequestVoteResponse(voteGranted bool) {
 	}
 }
 
-// func min(a, b int) int {
-// 	if a < b {
-// 		return a
-// 	}
-// 	return b
-// }
+func min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
 
 func (node *RaftNode) AppendEntriesResponse(success bool, followerID string, matchIndex int) {
 	node.mu.Lock()
@@ -279,12 +287,21 @@ func (node *RaftNode) ApplyLog(entry LogEntry) {
 	fmt.Printf("Applying log entry: %v\n", entry)
 }
 
-func (node *RaftNode) AddLogEntry(command string) {
+func (node *RaftNode) Metrics() map[string]interface{} {
 	node.mu.Lock()
 	defer node.mu.Unlock()
-	entry := LogEntry{
-		term:    node.term,
-		command: command,
+
+	metrics := map[string]interface{}{
+		"id":            node.id,
+		"state":         node.state,
+		"term":          node.term,
+		"commitIndex":   node.commitIndex,
+		"lastApplied":   node.lastApplied,
+		"leaderID":      node.leaderID,
+		"votedFor":      node.votedFor,
+		"votesReceived": node.votesReceived,
+		"peers":         node.peers,
 	}
-	node.log = append(node.log, entry)
+
+	return metrics
 }
