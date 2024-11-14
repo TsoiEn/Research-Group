@@ -14,7 +14,7 @@
 <body>
     <div id="error"></div>
     <div class="wrapper">
-        <form action="#" method="GET">
+        <form action="/login" method="POST">
             <div class="upper-wrapper">
                 <h1>Login</h1>
                 <p>Enter your username and password to log in</p>
@@ -31,6 +31,12 @@
                     <input type="password" placeholder="Password..." name="password" id="password" required>
                     <i class='bx bxs-lock-alt' ></i>
                 </div>
+
+                {{if .ErrorMessage}}
+                <div style = "color: red;">
+                    <center>{{.ErrorMessage}}</center>
+                </div><br>
+                {{end}}
 
                 <button type="submit" class="btn">Log In</button>
 
