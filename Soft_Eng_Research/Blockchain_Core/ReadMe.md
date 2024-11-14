@@ -1,55 +1,83 @@
-# Project Documentation
-
-## Overview
-
-This repository provides a checklist and documentation for the following knowledge areas and algorithms related to blockchain technology.
-
-## Knowledge Needs
-
-To effectively understand and work with blockchain technology, ensure you are familiar with the following topics:
-
-1. **Blockchain Fundamentals**: Understand the core principles and architecture of blockchain technology.
-2. **Data Structures**: Learn about the data structures commonly used in blockchain implementations.
-3. **Cryptography**: Gain knowledge about cryptographic techniques used for securing transactions and data.
-4. **Transaction Formats**: Familiarize yourself with the different formats of transactions in blockchain systems.
-5. **Merkle Tree**: Study the construction and application of Merkle Trees in blockchain.
-6. **Consensus Algorithm**: Learn about various consensus algorithms that help achieve agreement across distributed systems.
-
-## Algorithms
-
-This section outlines key algorithms relevant to blockchain technology:
-
-1. **Hashing**: Learn about hashing algorithms used to ensure data integrity and create unique identifiers.
-2. **Merkle Tree Construction**: Understand the process of constructing Merkle Trees for efficient and secure data verification.
-3. **Block Linking**: Study how blocks are linked together to form a secure chain.
-4. **Transaction Validation**: Learn how transactions are validated and verified within a blockchain network.
+Name: Hank B Davis, Age: 20, ID: 202533282, Email: dhb3282@example.edu.ph, Password: zpKVM4cQ
+Name: Charlie H Jones, Age: 25, ID: 202403450, Email: jch3450@example.edu.ph, Password: S2oS6gQP
+Name: Bob I Rodriguez, Age: 20, ID: 202209675, Email: rbi9675@example.edu.ph, Password: WXwoXDA9
+Name: Alice D Smith, Age: 25, ID: 202433194, Email: sad3194@example.edu.ph, Password: uOlgXCpt
+Name: Diana F Garcia, Age: 18, ID: 202226488, Email: gdf6488@example.edu.ph, Password: TOTVufqI
+Name: Alice J Garcia, Age: 18, ID: 202413171, Email: gaj3171@example.edu.ph, Password: 4G2mn3Fx
+Name: Eve D Brown, Age: 19, ID: 202120988, Email: bed0988@example.edu.ph, Password: IeGiLref
+Name: Bob C Garcia, Age: 20, ID: 202329393, Email: gbc9393@example.edu.ph, Password: ndIfT6TM
+Name: Frank J Jones, Age: 24, ID: 202207626, Email: jfj7626@example.edu.ph, Password: v2hXvvv4
+Name: Frank E Martinez, Age: 24, ID: 202203708, Email: mfe3708@example.edu.ph, Password: Sz6AkUMD
 
 
+### current structure of blockchain
+blockchain/
+├── chaincode/
+│   ├── src/
+│   │   ├── chaincode.go         # Main chaincode logic
+│   │   ├── model/
+│   │   │   ├── block.go         # Model files as dependencies
+│   │   │   ├── admin.go
+│   │   │   ├── credential.go
+│   │   │   ├── student.go
+│   │   │   ├── utils.go         # Optional utility functions
+│   │   ├── go.mod               # Module dependencies specific to chaincode
+│   │   ├── go.sum
+├── consensus/                  # Raft-related files
+│   ├── raft.go                 # Main Raft logic
+│   ├── raft_node.go            # Raft node management
+│   ├── raft_helpers.go         # Helper functions for Raft
+│   └── raft_config.go          # Raft configuration setup
+├── api/
+                  # Used for testing but 
 
 
-## StuCred Blockchain Project: Admin & Student Login
+### admin.go responsibilities
 
-### Admin Functionality
+- Adding new students
+- Adding academic credentials
+- Managing operations overseen by an admin, such as:
+    - Overseeing blockchain updates
+    - User management
 
-#### Define Credential Types
-- Update `credential.go` to include academic and non-academic credential distinctions.
+### block.go
+- manages block creation
+- hashing
+- serialization
 
-#### Implement Access Controls in `chaincode.go`
-- Allow admin (developer) to add, update, and delete academic credentials.
-- Restrict admin access to non-academic credentials (students only).
+### credential.go and student.go 
+- handle data models related to credentials and students, respectively.
 
-#### Separate Methods for Each Credential Type in `chaincode.go`
-- Add functions such as `AddAcademicCredential` and `UpdateAcademicCredential` for admin use.
-- Implement `AddNonAcademicCredential` for students to manage their own credentials.
+### chaincode.go 
+- is the main entry point where chaincode logic interacts with the blockchain.
 
-### Student Login
 
-#### Create Mock Login Section
-- Implement student login requiring only `studentID` and `password`.
-- Validate login credentials against mock data.
 
-### Additional Notes
+### API Integration
 
-#### Student Profile Information
-- Include `firstName`, `middleName`, `lastName`, `Age`, and `email` in the student profile but not in the login credentials.
+To connect the frontend and backend, you should create a new directory for your API within the `blockchain/` directory. Here is a suggested structure:
 
+```
+blockchain/
+├── chaincode/
+│   ├── src/
+│   │   ├── chaincode.go         # Main chaincode logic
+│   │   ├── model/
+│   │   │   ├── block.go         # Model files as dependencies
+│   │   │   ├── admin.go
+│   │   │   ├── credential.go
+│   │   │   ├── student.go
+│   │   │   ├── admin.go         # Optional, for admin-specific features
+│   │   ├── go.mod               # Module dependencies specific to chaincode
+│   │   ├── go.sum               # Dependency checksum file
+├── api/                         # New directory for API
+│   ├── main.go                  # Entry point for the API server
+│   ├── handlers/
+│   │   ├── studentHandler.go    # Handlers for student-related API endpoints
+│   │   ├── adminHandler.go      # Handlers for admin-related API endpoints
+│   ├── router.go                # Router configuration
+│   ├── go.mod                   # Module dependencies for the API
+│   ├── go.sum                   # Dependency checksum file
+```
+
+This structure keeps your API logic separate from your chaincode logic, making it easier to manage and maintain.
