@@ -5,8 +5,8 @@
     <meta charset="UTF=8">
     <meta http-equiv="X-UA-Compatible" content="IE-edge">
     <meta name="viewport" content="width-device-width, initial-scale=1.0">
-    <title>Student Credentials Login</title>
-    <link rel="stylesheet" href="alumni.css">
+    <title>Alumni Credentials Login</title>
+    <link rel="stylesheet" href="/alumnilog/alumni.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <script defer src="script.js"></script>
 </head>
@@ -14,7 +14,7 @@
 <body>
     <div id="error"></div>
     <div class="wrapper">
-        <form action="#" method="GET">
+        <form action="/alumnilogin" method="POST">
             <div class="upper-wrapper">
                 <h1>Login</h1>
                 <p>Enter your username and password to log in</p>
@@ -32,6 +32,12 @@
                     <i class='bx bxs-lock-alt' ></i>
                 </div>
 
+                {{if .ErrorMessage}}
+                <div style = "color: red;">
+                    <center>{{.ErrorMessage}}</center>
+                </div><br>
+                {{end}}
+
                 <button type="submit" class="btn">Log In</button>
 
                 <div class="options">
@@ -41,9 +47,9 @@
                     <a href="#">Contact Us</a>
                 </div>
                 <div class="portal">
-                    <a href="../login.html" class="student">STUDENT</a>
-                    <p href="#" class="alumni">Alumni</p>
-                    <a href="../adminlog/admin.html" class="admin">Admin</a>
+                    <a href="/studentlogin" class="student">STUDENT</a>
+                    <p class="alumni">ALUMNI</p>
+                    <a href="/adminlogin" class="admin">ADMIN</a>
                 </div>
             </div>
         </form>

@@ -1,9 +1,7 @@
 package main
 
 import (
-	"crypto/sha256"
 	"database/sql"
-	"encoding/hex"
 	"fmt"
 	"html/template"
 	"log"
@@ -34,64 +32,7 @@ type Account struct {
 	Password string
 }
 
-// Handler to fetch account information
-func loginHandler(w http.ResponseWriter, r *http.Request) {
-	var errorMessage string
-
-	if r.Method == http.MethodPost {
-		// Parse form data
-		username := r.FormValue("username")
-		password := r.FormValue("password")
-
-		// Check information in the database
-		var storedPassword, accountID string
-		err := db.QueryRow("SELECT password, accountID FROM accounts WHERE username = ?", username).Scan(&storedPassword, &accountID)
-		if err != nil {
-			if err == sql.ErrNoRows {
-				errorMessage = "Invalid username or password"
-			} else {
-				errorMessage = "Server error. Please try again later."
-			}
-		} else {
-			// Hash the input password for accurate comparison
-			hash := sha256.Sum256([]byte(password))
-			hashedPassword := hex.EncodeToString(hash[:])
-
-			// Compare the hashed input password and the hashed stored password
-			if hashedPassword != storedPassword {
-				errorMessage = "Invalid username or password."
-			} else {
-				// Compare if the accountID starts with "3", indicating a student account
-				if accountID[:1] != "3" {
-					errorMessage = "This is not student account."
-				} else {
-					// Render next page if it's a valid student account
-					http.Redirect(w, r, "/success", http.StatusSeeOther)
-					return
-				}
-			}
-		}
-
-		// If there is an error, render the login page with the error message
-		tmpl := template.Must(template.ParseFiles("../../FrontEnd/LoginPage/login.html"))
-		tmpl.Execute(w, struct {
-			ErrorMessage string
-			Username     string
-			Password     string
-		}{
-			ErrorMessage: errorMessage,
-			Username:     username,
-			Password:     "", //Clear the password field
-		})
-		return
-	}
-
-	// Initial form rendering
-	tmpl := template.Must(template.ParseFiles("../../FrontEnd/LoginPage/login.html"))
-	tmpl.Execute(w, nil)
-}
-
-// Handler to go into next page
+// Handler to go into next page (TEST (will delete))
 func successHandler(w http.ResponseWriter, r *http.Request) {
 	tmpl := template.Must(template.ParseFiles("success.html"))
 	tmpl.Execute(w, nil)
@@ -105,13 +46,21 @@ func main() {
 	// Set up routes (r)
 	r := mux.NewRouter()
 
-	// Define routes for login and next page
-	r.HandleFunc("/login", loginHandler).Methods("GET", "POST")
-	r.HandleFunc("/success", successHandler).Methods("GET")
+	// ROUTES
+	r.HandleFunc("/adminlogin", adminHandler).Methods("GET", "POST")     // Admin login
+	r.HandleFunc("/alumnilogin", alumniHandler).Methods("GET", "POST")   // Alumni login
+	r.HandleFunc("/studentlogin", studentHandler).Methods("GET", "POST") // Student login
+	r.HandleFunc("/success", successHandler).Methods("GET")              // Success page
 
-	// Serve static files (CSS, JS, images)
-	fs := http.FileServer(http.Dir("../../FrontEnd/LoginPage"))
-	r.PathPrefix("/").Handler(http.StripPrefix("/", fs))
+	// STATIC FILES (Serve CSS, JS, images)
+	fsAdmin := http.FileServer(http.Dir("../../FrontEnd/LoginPage/adminlog"))
+	r.PathPrefix("/adminlog/").Handler(http.StripPrefix("/adminlog", fsAdmin))
+
+	fsAlumni := http.FileServer(http.Dir("../../FrontEnd/LoginPage/alumnilog"))
+	r.PathPrefix("/alumnilog/").Handler(http.StripPrefix("/alumnilog", fsAlumni))
+
+	fsStud := http.FileServer(http.Dir("../../FrontEnd/LoginPage"))
+	r.PathPrefix("/").Handler(http.StripPrefix("/", fsStud))
 
 	// Start the local server
 	fmt.Println("Server is running on http://localhost:8080")
