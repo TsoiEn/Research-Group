@@ -8,8 +8,8 @@ import (
 	"net/http"
 )
 
-// Handler to fetch ALUMNI account information
-func alumniHandler(w http.ResponseWriter, r *http.Request) {
+// Handler to fetch STUDENT account information
+func studentHandler(w http.ResponseWriter, r *http.Request) {
 	var errorMessage string
 
 	if r.Method == http.MethodPost {
@@ -17,7 +17,7 @@ func alumniHandler(w http.ResponseWriter, r *http.Request) {
 		username := r.FormValue("username")
 		password := r.FormValue("password")
 
-		// Query the database for alumni credentials
+		// Query the database for student credentials
 		var storedPassword, accountID string
 		err := db.QueryRow("SELECT password, accountID FROM accounts WHERE username = ?", username).Scan(&storedPassword, &accountID)
 		if err != nil {
@@ -35,19 +35,19 @@ func alumniHandler(w http.ResponseWriter, r *http.Request) {
 			if hashedPassword != storedPassword {
 				errorMessage = "Invalid username or password."
 			} else {
-				// Compare if the accountID starts with "2", indicating an alumni account
-				if accountID[:1] != "2" {
-					errorMessage = "This is not an alumni account."
+				// Compare if the accountID starts with "3", indicating a student account
+				if accountID[:1] != "3" {
+					errorMessage = "This is not a student account."
 				} else {
-					// Render next page if it's a valid alumni account
+					// Render next page if it's a valid student account
 					http.Redirect(w, r, "/success", http.StatusSeeOther)
 					return
 				}
 			}
 		}
 
-		// If there is an error, render the alumni page with the error message
-		tmpl := template.Must(template.ParseFiles("../../FrontEnd/LoginPage/alumnilog/alumni.html"))
+		// If there is an error, render the login page with the error message
+		tmpl := template.Must(template.ParseFiles("../../FrontEnd/LoginPage/login.html"))
 		tmpl.Execute(w, struct {
 			ErrorMessage string
 			Username     string
@@ -60,7 +60,7 @@ func alumniHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// ALUMNI page rendering
-	tmpl := template.Must(template.ParseFiles("../../FrontEnd/LoginPage/alumnilog/alumni.html"))
+	// STUDENT page rendering
+	tmpl := template.Must(template.ParseFiles("../../FrontEnd/LoginPage/login.html"))
 	tmpl.Execute(w, nil)
 }
