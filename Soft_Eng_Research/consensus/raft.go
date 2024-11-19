@@ -9,23 +9,28 @@ import (
 )
 
 type RaftNode struct {
-	id               string
-	state            string
-	term             int
-	log              []LogEntry
-	commitIndex      int
-	lastApplied      int
-	nextIndex        map[string]int
-	matchIndex       map[string]int
-	timeout          time.Duration
-	heartbeatTimeout time.Duration
-	heartbeatTimer   *time.Timer
-	electionTimer    *time.Timer
-	leaderID         string
-	votedFor         string
-	votesReceived    int
-	peers            []string
-	mu               sync.Mutex
+	id                 string
+	state              string
+	term               int
+	log                []LogEntry
+	commitIndex        int
+	lastApplied        int
+	nextIndex          map[string]int
+	matchIndex         map[string]int
+	timeout            time.Duration
+	heartbeatTimeout   time.Duration
+	heartbeatTimer     *time.Timer
+	electionTimer      *time.Timer
+	leaderID           string
+	votedFor           string
+	votesReceived      int
+	peers              []string
+	mu                 sync.Mutex
+	ElectionTimeoutMin time.Duration // Minimum timeout for elections
+	ElectionTimeoutMax time.Duration // Maximum timeout for elections
+	HeartbeatInterval  time.Duration // Interval for heartbeats
+	PeerCount          int           // Total number of peers in the cluster
+	MaxRetries         int
 }
 
 type LogEntry struct {
