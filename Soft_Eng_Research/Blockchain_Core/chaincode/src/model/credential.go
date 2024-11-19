@@ -2,14 +2,14 @@ package model
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
-	"log"
 	"time"
 )
 
+// CredentialType enumeration
 type CredentialType int
 
-// CredentialType enumeration
 const (
 	Academic CredentialType = iota
 	NonAcademic
@@ -17,40 +17,22 @@ const (
 	Diploma
 )
 
-// String returns the string representation of the CredentialType
 func (ct CredentialType) String() string {
 	return [...]string{"Academic", "NonAcademic", "Certificate", "Diploma"}[ct]
 }
 
+// Credential represents an individual credential.
 type Credential struct {
 	ID         string         `json:"id"`
 	Type       CredentialType `json:"type"`
 	Issuer     string         `json:"issuer"`
 	DateIssued time.Time      `json:"date_issued"`
 	Hash       []byte         `json:"hash"`
-	PrevHash   []byte         `json:"prev_hash"`
 	Status     string         `json:"status"`
 }
 
-// CredentialChain represents a chain of credentials
-type CredentialChain struct {
-	Credentials []Credential
-}
-
-// VerifyCredential checks if a credential is valid by comparing its hash
-func (cred *Credential) VerifyCredential(s *Student) bool {
-	expectedHash := GenerateCredentialHash(cred)
-	for _, storedCred := range s.Credentials {
-		if bytes.Equal(storedCred.Hash, expectedHash) {
-			return true
-		}
-	}
-	log.Println("Credential verification failed")
-	return false
-}
-
-// ValidateCredentialData checks the validity of the credential fields
-func ValidateCredentialData(cred Credential) error {
+// ValidateCredentialData ensures the credential fields are valid.
+func ValidateCredentialData(cred *Credential) error {
 	if cred.Type.String() == "" {
 		return fmt.Errorf("credential type cannot be empty")
 	}
@@ -63,9 +45,31 @@ func ValidateCredentialData(cred Credential) error {
 	return nil
 }
 
-func LookupCredentials(s *Student) {
-	for _, cred := range s.Credentials {
-		fmt.Printf("Credential: %s, Issued by: %s, Issued on: %s, Status: %s\n",
-			cred.Type, cred.Issuer, cred.DateIssued.String(), cred.Status)
+// CredentialChain is an alias for BlockChain, which stores credentials.
+type CredentialChain struct {
+	BlockChain
+}
+
+// AddCredential adds a new credential to the blockchain.
+func (chain *CredentialChain) AddCredential(cred *Credential) error {
+	if err := ValidateCredentialData(cred); err != nil {
+		return err
 	}
+	cred.Hash = GenerateCredentialHash(cred)
+	credData, err := json.Marshal(cred)
+	if err != nil {
+		return err
+	}
+	chain.AddBlock(credData)
+	return nil
+}
+
+// VerifyCredential checks if a credential exists in the blockchain.
+func (chain *CredentialChain) VerifyCredential(id string) (bool, error) {
+	cred, err := chain.FindCredentialByID(id)
+	if err != nil {
+		return false, err
+	}
+	expectedHash := GenerateCredentialHash(cred)
+	return bytes.Equal(cred.Hash, expectedHash), nil
 }

@@ -12,13 +12,32 @@ type SmartContract struct {
 }
 
 func (s *SmartContract) InitLedger(ctx contractapi.TransactionContextInterface) error {
-	// Code for ledger initialization
+	blocks := []model.Block{
+		*model.CreateBlock(1, []byte("Genesis Block"), []byte("")),
+	}
+
+	for _, block := range blocks {
+		serializedBlock, err := block.Serialize()
+		if err != nil {
+			return fmt.Errorf("failed to serialize block: %v", err)
+		}
+		err = ctx.GetStub().PutState(string(block.Hash), serializedBlock)
+		if err != nil {
+			return fmt.Errorf("failed to put block in ledger: %v", err)
+		}
+	}
 	return nil
 }
 
 func (s *SmartContract) CreateBlock(ctx contractapi.TransactionContextInterface, blockData string) error {
 	block := model.CreateBlock(1, []byte(blockData), []byte("previousHash"))
-	// Code to add block to the ledger
+	existingBlock, err := ctx.GetStub().GetState(string(block.Hash))
+	if err != nil {
+		return fmt.Errorf("failed to get block: %v", err)
+	}
+	if existingBlock != nil {
+		return fmt.Errorf("block already exists")
+	}
 	serializedBlock, err := block.Serialize()
 	if err != nil {
 		return fmt.Errorf("failed to serialize block: %v", err)

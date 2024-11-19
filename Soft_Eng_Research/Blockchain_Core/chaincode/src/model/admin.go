@@ -42,7 +42,7 @@ func (a *Admin) AddCredentialAdmin(s *Student, credentialType CredentialType, is
 	}
 
 	// Validate the credential data
-	if err := ValidateCredentialData(newCredential); err != nil {
+	if err := ValidateCredentialData(&newCredential); err != nil {
 		return false
 	}
 
