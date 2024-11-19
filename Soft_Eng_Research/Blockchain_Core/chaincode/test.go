@@ -11,6 +11,9 @@ import (
 var studentChain = &model.StudentChain{}
 
 // Function to simulate user input for testing admin operations
+// Create a credential blockchain
+var credentialChain = &model.CredentialChain{BlockChain: *model.NewBlockChain()}
+
 func testAdminOperations() {
 
 	admin := &model.Admin{
@@ -22,11 +25,14 @@ func testAdminOperations() {
 	fmt.Println("Testing AddNewStudent...")
 	newStudent := admin.AddNewStudent(202013432, "John", "Doe", 21, time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC), 1, studentChain)
 	if newStudent != nil {
-		studentChain.Students = append(studentChain.Students, newStudent) // Ensure the student is added to the chain
+		studentChain.Students = append(studentChain.Students, newStudent)
 		fmt.Println("AddNewStudent passed:", newStudent)
 	} else {
 		fmt.Println("AddNewStudent failed.")
 	}
+
+	// Display blockchain state after adding student
+	displayBlockchainState(&credentialChain.BlockChain)
 
 	// Simulate adding a credential by admin
 	fmt.Println("\nTesting AddCredentialAdmin...")
@@ -37,16 +43,25 @@ func testAdminOperations() {
 	}
 	adminSuccess := admin.AddCredentialAdmin(newStudent, cred.Type, cred.Issuer, cred.DateIssued)
 	if adminSuccess {
-		fmt.Println("AddCredentialAdmin passed.")
+		// Add credential to the blockchain
+		err := credentialChain.AddCredential(&cred)
+		if err != nil {
+			fmt.Println("Failed to add credential to blockchain:", err)
+		} else {
+			fmt.Println("AddCredentialAdmin passed.")
+		}
 	} else {
 		fmt.Println("AddCredentialAdmin failed.")
 	}
+
+	// Display blockchain state after adding credential
+	displayBlockchainState(&credentialChain.BlockChain)
 }
 
 // Function to simulate user input for testing student operations
 func testStudentOperations() {
 	student := &model.Student{
-		StudentID:   202013432, // Example student ID
+		StudentID:   202013432,
 		FirstName:   "John",
 		LastName:    "Doe",
 		Age:         21,
@@ -64,10 +79,19 @@ func testStudentOperations() {
 	}
 	studentSuccess := student.AddCredential(cred.Type, cred.Issuer, cred.DateIssued)
 	if studentSuccess {
-		fmt.Println("AddCredential passed.")
+		// Add credential to the blockchain
+		err := credentialChain.AddCredential(&cred)
+		if err != nil {
+			fmt.Println("Failed to add credential to blockchain:", err)
+		} else {
+			fmt.Println("AddCredential passed.")
+		}
 	} else {
 		fmt.Println("AddCredential failed.")
 	}
+
+	// Display blockchain state after adding credential
+	displayBlockchainState(&credentialChain.BlockChain)
 
 	// Simulate updating student credentials
 	fmt.Println("\nTesting UpdateStudentCredentials...")
@@ -83,6 +107,9 @@ func testStudentOperations() {
 		fmt.Println("UpdateStudentCredentials failed.")
 	}
 
+	// Display blockchain state after updating credentials
+	displayBlockchainState(&credentialChain.BlockChain)
+
 	// Simulate finding a student by ID
 	fmt.Println("\nTesting FindStudentByID...")
 	StudentID := studentID
@@ -91,13 +118,26 @@ func testStudentOperations() {
 		fmt.Println("Invalid student ID:", StudentID)
 		return
 	}
-	// This should be an existing instance with data
 	foundStudent, err := studentChain.FindStudentByID(studentIDInt)
 	if err != nil {
 		fmt.Println("FindStudentByID failed:", err)
 	} else {
 		fmt.Printf("FindStudentByID passed. Found student: %v\n", foundStudent)
 	}
+}
+
+// Helper function to display the current state of the blockchain
+func displayBlockchainState(blockchain *model.BlockChain) {
+	fmt.Println("\n--- Blockchain State ---")
+	for i, block := range blockchain.Blocks {
+		fmt.Printf("Block %d:\n", i)
+		fmt.Printf("  Index: %d\n", block.Index)
+		fmt.Printf("  Timestamp: %s\n", block.Timestamp)
+		fmt.Printf("  Hash: %x\n", block.Hash)
+		fmt.Printf("  PrevHash: %x\n", block.PrevHash)
+		fmt.Printf("  Data: %s\n\n", string(block.Data))
+	}
+
 }
 
 func main() {

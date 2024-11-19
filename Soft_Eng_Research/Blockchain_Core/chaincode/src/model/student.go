@@ -34,7 +34,7 @@ func (s *Student) AddCredential(credentialType CredentialType, issuer string, da
 	}
 
 	// Validate the credential data
-	if err := ValidateCredentialData(newCredential); err != nil {
+	if err := ValidateCredentialData(&newCredential); err != nil {
 		return false
 	}
 
