@@ -3,7 +3,7 @@ module backend
 go 1.23.2
 
 require (
-	github.com/TsoiEn/Research-Group/Soft_Eng_Research/Blockchain_Core/chaincode v0.0.0-20241120074807-b14447fc1346
+	github.com/TsoiEn/Research-Group/MLResearch/backend/chaincode v0.0.0-20241120074807-b14447fc1346
 	github.com/hyperledger/fabric-contract-api-go v1.2.2
 )
 
