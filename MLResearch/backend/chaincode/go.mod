@@ -1,4 +1,4 @@
-module backend
+module github.com/TsoiEn/Research-Group/MLResearch/backend/chaincode
 
 go 1.23.2
 
