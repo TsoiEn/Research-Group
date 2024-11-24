@@ -1,4 +1,4 @@
-package main
+package login
 
 import (
 	"crypto/sha256"
@@ -6,7 +6,12 @@ import (
 	"encoding/hex"
 	"html/template"
 	"net/http"
+
+	"github.com/gorilla/sessions"
 )
+
+// Session store
+var storeStuProf = sessions.NewCookieStore([]byte("studentsessionkey"))
 
 // Handler to fetch STUDENT account information
 func studentHandler(w http.ResponseWriter, r *http.Request) {
@@ -34,20 +39,23 @@ func studentHandler(w http.ResponseWriter, r *http.Request) {
 			// Compare the hashed input password and the hashed stored password
 			if hashedPassword != storedPassword {
 				errorMessage = "Invalid username or password."
-			} else {
+			} else if accountID[:1] != "3" {
 				// Compare if the accountID starts with "3", indicating a student account
-				if accountID[:1] != "3" {
-					errorMessage = "This is not a student account."
-				} else {
-					// Render next page if it's a valid student account
-					http.Redirect(w, r, "/success", http.StatusSeeOther)
-					return
-				}
+				errorMessage = "This is not a student account."
+			} else {
+				// Store accountID in a session
+				session, _ := storeStuProf.Get(r, "student-session")
+				session.Values["accountID"] = accountID
+				session.Save(r, w)
+
+				// Render next page if it's a valid student account
+				http.Redirect(w, r, "/login/studentprofile", http.StatusSeeOther)
+				return
 			}
 		}
 
 		// If there is an error, render the login page with the error message
-		tmpl := template.Must(template.ParseFiles("../../FrontEnd/LoginPage/login.html"))
+		tmpl := template.Must(template.ParseFiles("../FrontEnd/LoginPage/login.html"))
 		tmpl.Execute(w, struct {
 			ErrorMessage string
 			Username     string
@@ -61,6 +69,6 @@ func studentHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// STUDENT page rendering
-	tmpl := template.Must(template.ParseFiles("../../FrontEnd/LoginPage/login.html"))
+	tmpl := template.Must(template.ParseFiles("../FrontEnd/LoginPage/login.html"))
 	tmpl.Execute(w, nil)
 }
