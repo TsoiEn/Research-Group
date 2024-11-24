@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Student Credentials</title>
+    <link rel="stylesheet" href="/home/StudentCredentials/StudentCred.css">
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <div class="header">
+        <h1>Student Credentials</h1>
+    </div>
+    <div class="banner"></div>
+    <nav class="navbar">
+        <ul>
+            <li><a href="../login/studentprofile">Profile</a></li>
+            <li><a1 href="#">Credentials</a1></li>
+        </ul>
+    </nav>
+    <div class="background">
+        <div class="credentials-container">
+            <div class="tabs">
+                <button class="tab-btn active" onclick="showTab('academic')">Academic</button>
+                <button class="tab-btn" onclick="showTab('non-academic')">Non-Academic</button>
+                <button class="tab-btn" onclick="showTab('certificate')">Certificate</button>
+            </div>
+            <div id="academic" class="tab-content active">
+                <div class="grid">
+                    <div class="credential">Credential #1</div>
+                    <div class="credential">Credential #2</div>
+                    <div class="credential">Credential #3</div>
+                </div>
+            </div>
+            <div id="non-academic" class="tab-content">
+                <div class="grid">
+                    <div class="credential">Credential #1</div>
+                    <div class="credential">Credential #2</div>
+                    <div class="credential">Credential #3</div>
+                </div>
+                <button class="add-btn">Add Non-Academic</button>
+            </div>
+            <div id="certificate" class="tab-content">
+                <div class="grid">
+                    <div class="credential">Credential #1</div>
+                    <div class="credential">Credential #2</div>
+                    <div class="credential">Credential #3</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
