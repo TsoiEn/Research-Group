@@ -13,18 +13,18 @@ body {
 }
 
 .header {
-    background-color: #000;
+    background-color: #377eb1;
     padding: 15px;
     text-align: left;
 }
 
 .header h1 {
     font-size: 24px;
-    margin: 0 25 px;
+    margin: 0 25px;
 }
 
 .banner {
-    background-image: url('rotonda.jpg');
+    background-image: url('SchoolBG.jpg');
     background-size: cover;
     opacity: 0.5;
     background-position: center;
@@ -32,7 +32,7 @@ body {
 }
 
 .navbar {
-    background-color: #228B22;
+    background-color: #72A0C1;
     display: flex;
     justify-content: left;
     padding: 0 10px
@@ -49,7 +49,7 @@ body {
 }
 
 .navbar a1 {
-    color:#228B22;
+    color:#72A0C1;
     padding: 8px 10.5px 20px;
     border-radius: 10px;
     background-color: #fff;
@@ -62,7 +62,7 @@ body {
 }
 
 .navbar a:hover {
-    color:#228B22;
+    color:#72A0C1;
     padding: 8px 10.5px 20px;
     border-radius: 10px;
     background-color: #fff;
@@ -74,7 +74,7 @@ body {
 }
 
 .credentials-container {
-    background-color: #186b18;
+    background-color: #377eb1;
     padding: 20px;
     margin: 30px;
     border-radius: 10px;
@@ -94,7 +94,7 @@ body {
 }
 
 .tab.active {
-    background: #4caf50;
+    background: #226a8b;
 }
 
 main {
@@ -120,7 +120,7 @@ main {
 }
 
 #add-student-btn {
-    background: #228B22;
+    background: #226a8b;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -129,5 +129,5 @@ main {
 }
 
 #add-student-btn:hover {
-    background: #1b5e20;
+    background: #3fa4d3;
 }
