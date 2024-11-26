@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -37,7 +38,8 @@ func AddNewStudentAPI(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Create a new Raft Node (you can expand this to handle more nodes and state)
-	node := consensus.NewRaftNode("node1", []string{"node2", "node3"})
+	node := consensus.CreateRaftNode("node1", 5*time.Second, 10*time.Second)
+	fmt.Println(node)
 
 	// Submit the transaction
 	err = node.ProposeTransaction(transaction)
