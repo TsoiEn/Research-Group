@@ -64,6 +64,7 @@ func (chain *StudentChain) UpdateStudentCredentials(id int, newCredential Creden
 	student.Credentials = append(student.Credentials, &newCredential)
 	// Return successfully
 	return true
+
 }
 
 // FindStudentByID should find and return a student by ID (this needs to be implemented)
