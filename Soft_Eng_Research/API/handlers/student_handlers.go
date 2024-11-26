@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	node "github.com/TsoiEn/Research-Group/Soft_Eng_Research/consensus"
+	node "consensus"
 )
 
 func AddNewStudentAPI(w http.ResponseWriter, r *http.Request) {
