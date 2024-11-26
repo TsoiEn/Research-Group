@@ -1,6 +1,7 @@
 package consensus
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"net/rpc"
@@ -31,6 +32,9 @@ type RaftNode struct {
 	HeartbeatInterval  time.Duration // Interval for heartbeats
 	PeerCount          int           // Total number of peers in the cluster
 	MaxRetries         int
+	currentState       map[string]interface{} // Simulated blockchain state
+	otherNodes         []string               // Addresses of other nodes
+	transactionCh      chan map[string]interface{}
 }
 
 type LogEntry struct {
@@ -332,6 +336,26 @@ func (node *RaftNode) ApplyLog(entry LogEntry) {
 	default:
 		fmt.Printf("Unknown command: %s\n", entry.Command)
 	}
+}
+
+func (rn *RaftNode) ProposeTransaction(transaction map[string]interface{}) error {
+	rn.mu.Lock()
+	defer rn.mu.Unlock()
+
+	// Check if this node is the leader
+	if !rn.isLeader() {
+		return errors.New("this node is not the leader")
+	}
+
+	// Append the transaction to the log and replicate it to other nodes
+	err := rn.replicateTransaction(transaction)
+	if err != nil {
+		return err
+	}
+
+	// Apply the transaction to the current state
+	rn.applyTransaction(transaction)
+	return nil
 }
 
 func (node *RaftNode) SubmitTransaction(command string, args []interface{}) {
