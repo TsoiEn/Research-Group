@@ -11,18 +11,19 @@ type Admin struct {
 	Name    string `json:"name"`
 }
 
-func (a *Admin) AddNewStudent(id int, firstName, lastName string, age int, birthDate time.Time, studentNum int, chain *StudentChain) *Student {
-	student := &Student{
-		StudentID:   id,
-		FirstName:   firstName,
-		LastName:    lastName,
-		BirthDate:   birthDate,
-		Credentials: []*Credential{},
+func AddNewStudent(id int, firstName, lastName string, birthDate time.Time, studentNum int, chain *StudentChain) *Student {
+	if chain.Students == nil {
+		chain.Students = make(map[int]*Student)
 	}
-
-	// Add the student to the StudentChain
-	chain.Students[student.StudentID] = student
-	return student
+	student := Student{
+		ID:        id,
+		FirstName: firstName,
+		LastName:  lastName,
+		BirthDate: birthDate,
+		StudentID: studentNum,
+	}
+	chain.Students[id] = &student
+	return &student
 }
 
 // AddCredentialAdmin adds a new academic credential to the student's list of academic credentials
