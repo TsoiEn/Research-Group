@@ -37,6 +37,28 @@ type RaftNode struct {
 	transactionCh      chan map[string]interface{}
 }
 
+func NewRaftNode(id string, peers []string) *RaftNode {
+	return &RaftNode{
+		id:                 id,
+		state:              "follower", // Default state is follower
+		term:               0,
+		log:                []LogEntry{},
+		commitIndex:        0,
+		lastApplied:        0,
+		nextIndex:          make(map[string]int),
+		matchIndex:         make(map[string]int),
+		peers:              peers,
+		mu:                 sync.Mutex{},
+		currentState:       make(map[string]interface{}),
+		transactionCh:      make(chan map[string]interface{}, 100),
+		ElectionTimeoutMin: 150 * time.Millisecond,
+		ElectionTimeoutMax: 300 * time.Millisecond,
+		HeartbeatInterval:  100 * time.Millisecond,
+		PeerCount:          len(peers),
+		MaxRetries:         5,
+	}
+}
+
 type LogEntry struct {
 	term    int
 	command string
@@ -356,6 +378,28 @@ func (rn *RaftNode) ProposeTransaction(transaction map[string]interface{}) error
 	// Apply the transaction to the current state
 	rn.applyTransaction(transaction)
 	return nil
+}
+
+func (rn *RaftNode) replicateTransaction(transaction map[string]interface{}) error {
+	for _, nodeAddress := range rn.otherNodes {
+		// Send the transaction to the other nodes (simulate with HTTP or gRPC)
+		// Example: HTTP POST to replicate the transaction
+		// Simulated here:
+		go func(addr string) {
+			// Simulate replication logic
+		}(nodeAddress)
+	}
+	return nil
+}
+
+func (rn *RaftNode) applyTransaction(transaction map[string]interface{}) {
+	// Simulate applying the transaction to the current state
+	rn.currentState[transaction["action"].(string)] = transaction["data"]
+}
+
+func (rn *RaftNode) isLeader() bool {
+	// Simulate checking if the current node is the leader
+	return rn.leaderID == 1 // Example: Assume this node is the leader
 }
 
 func (node *RaftNode) SubmitTransaction(command string, args []interface{}) {
