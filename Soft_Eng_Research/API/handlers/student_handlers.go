@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	node "github.com/TsoiEn/Research-Group/Soft_Eng_Research/consensus"
+	"github.com/TsoiEn/Research-Group/Soft_Eng_Research/consensus"
 )
 
 func AddNewStudentAPI(w http.ResponseWriter, r *http.Request) {
@@ -37,7 +37,7 @@ func AddNewStudentAPI(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Create a new Raft Node (you can expand this to handle more nodes and state)
-	node := node.NewRaftNode("node1", []string{"node2", "node3"}) // Example with peers
+	node := consensus.NewRaftNode("node1", []string{"node2", "node3"})
 
 	// Submit the transaction
 	err = node.ProposeTransaction(transaction)
