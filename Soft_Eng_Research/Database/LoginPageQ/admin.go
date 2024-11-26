@@ -1,4 +1,4 @@
-package main
+package login
 
 import (
 	"crypto/sha256"
@@ -40,14 +40,14 @@ func adminHandler(w http.ResponseWriter, r *http.Request) {
 					errorMessage = "This is not an admin account."
 				} else {
 					// Render next page if it's a valid admin account
-					http.Redirect(w, r, "/success", http.StatusSeeOther)
+					http.Redirect(w, r, "/login/adminstudentlist", http.StatusSeeOther)
 					return
 				}
 			}
 		}
 
 		// If there is an error, render the admin page with the error message
-		tmpl := template.Must(template.ParseFiles("../../FrontEnd/LoginPage/adminlog/admin.html"))
+		tmpl := template.Must(template.ParseFiles("../FrontEnd/LoginPage/adminlog/admin.html"))
 		tmpl.Execute(w, struct {
 			ErrorMessage string
 			Username     string
@@ -61,6 +61,6 @@ func adminHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// ADMIN page rendering
-	tmpl := template.Must(template.ParseFiles("../../FrontEnd/LoginPage/adminlog/admin.html"))
+	tmpl := template.Must(template.ParseFiles("../FrontEnd/LoginPage/adminlog/admin.html"))
 	tmpl.Execute(w, nil)
 }
