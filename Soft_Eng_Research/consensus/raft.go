@@ -318,7 +318,7 @@ func (node *RaftNode) Commit() {
 func (node *RaftNode) ApplyLog(entry LogEntry) {
 	fmt.Printf("Applying log entry: %v\n", entry)
 
-	switch entry.Command {
+	switch entry.command {
 	case "AddNewStudent":
 		// Extract arguments from the log entry
 		if len(entry.Args) != 7 {
@@ -356,7 +356,7 @@ func (node *RaftNode) ApplyLog(entry LogEntry) {
 		}
 
 	default:
-		fmt.Printf("Unknown command: %s\n", entry.Command)
+		fmt.Printf("Unknown command: %s\n", entry.command)
 	}
 }
 
@@ -399,13 +399,13 @@ func (rn *RaftNode) applyTransaction(transaction map[string]interface{}) {
 
 func (rn *RaftNode) isLeader() bool {
 	// Simulate checking if the current node is the leader
-	return rn.leaderID == 1 // Example: Assume this node is the leader
+	return rn.leaderID == rn.id // Check if this node is the leader
 }
 
 func (node *RaftNode) SubmitTransaction(command string, args []interface{}) {
 	entry := LogEntry{
-		Term:    node.term,
-		Command: command,
+		term:    node.term,
+		command: command,
 		Args:    args,
 	}
 
@@ -419,7 +419,7 @@ func (node *RaftNode) SubmitTransaction(command string, args []interface{}) {
 	node.SubmitTransaction("AddNewStudent", []interface{}{1, "John", "Doe", 20, time.Now(), 12345, chain})
 
 	newCredential := Credential{ /* Fill in the credential details */ }
-	chain := &StudentChain{}
+	chain = &StudentChain{}
 	node.SubmitTransaction("UpdateStudentCredentials", []interface{}{1, newCredential, chain})
 
 }
