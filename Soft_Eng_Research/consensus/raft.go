@@ -37,28 +37,6 @@ type RaftNode struct {
 	transactionCh      chan map[string]interface{}
 }
 
-func NewRaftNode(id string, peers []string) *RaftNode {
-	return &RaftNode{
-		id:                 id,
-		state:              "follower", // Default state is follower
-		term:               0,
-		log:                []LogEntry{},
-		commitIndex:        0,
-		lastApplied:        0,
-		nextIndex:          make(map[string]int),
-		matchIndex:         make(map[string]int),
-		peers:              peers,
-		mu:                 sync.Mutex{},
-		currentState:       make(map[string]interface{}),
-		transactionCh:      make(chan map[string]interface{}, 100),
-		ElectionTimeoutMin: 150 * time.Millisecond,
-		ElectionTimeoutMax: 300 * time.Millisecond,
-		HeartbeatInterval:  100 * time.Millisecond,
-		PeerCount:          len(peers),
-		MaxRetries:         5,
-	}
-}
-
 type LogEntry struct {
 	term    int
 	command string
@@ -364,18 +342,26 @@ func (rn *RaftNode) ProposeTransaction(transaction map[string]interface{}) error
 	rn.mu.Lock()
 	defer rn.mu.Unlock()
 
-	// Check if this node is the leader
+	// Leadership check
 	if !rn.isLeader() {
 		return errors.New("this node is not the leader")
 	}
 
-	// Append the transaction to the log and replicate it to other nodes
+	// Append transaction to local log
+	entry := LogEntry{
+		term:    rn.term,
+		command: fmt.Sprintf("%v", transaction),
+	}
+	rn.log = append(rn.log, entry)
+
+	// Replicate to other nodes
 	err := rn.replicateTransaction(transaction)
 	if err != nil {
 		return err
 	}
 
-	// Apply the transaction to the current state
+	// Commit and apply transaction
+	rn.commitIndex++
 	rn.applyTransaction(transaction)
 	return nil
 }
