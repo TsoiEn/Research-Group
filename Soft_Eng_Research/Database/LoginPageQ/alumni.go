@@ -1,4 +1,4 @@
-package main
+package login
 
 import (
 	"crypto/sha256"
@@ -40,14 +40,14 @@ func alumniHandler(w http.ResponseWriter, r *http.Request) {
 					errorMessage = "This is not an alumni account."
 				} else {
 					// Render next page if it's a valid alumni account
-					http.Redirect(w, r, "/success", http.StatusSeeOther)
+					http.Redirect(w, r, "/login/studentprofile", http.StatusSeeOther)
 					return
 				}
 			}
 		}
 
 		// If there is an error, render the alumni page with the error message
-		tmpl := template.Must(template.ParseFiles("../../FrontEnd/LoginPage/alumnilog/alumni.html"))
+		tmpl := template.Must(template.ParseFiles("../FrontEnd/LoginPage/alumnilog/alumni.html"))
 		tmpl.Execute(w, struct {
 			ErrorMessage string
 			Username     string
@@ -61,6 +61,6 @@ func alumniHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// ALUMNI page rendering
-	tmpl := template.Must(template.ParseFiles("../../FrontEnd/LoginPage/alumnilog/alumni.html"))
+	tmpl := template.Must(template.ParseFiles("../FrontEnd/LoginPage/alumnilog/alumni.html"))
 	tmpl.Execute(w, nil)
 }
