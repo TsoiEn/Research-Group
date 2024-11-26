@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"/home/tsoien/github/Research-Group/Soft_Eng_Research/Blockchain_Core/chaincode"
+	"github.com/TsoiEn/Research-Group/Soft_Eng_Research/blockchain_core/chaincode"
 )
 
 type RaftNode struct {
@@ -429,4 +429,65 @@ func (node *RaftNode) Metrics() map[string]interface{} {
 	}
 
 	return metrics
+}
+
+func (node *RaftNode) CommitTransaction(command string, args []interface{}) error {
+	node.mu.Lock()
+	defer node.mu.Unlock()
+
+	if !node.isLeader() {
+		return errors.New("this node is not the leader")
+	}
+
+	entry := LogEntry{
+		term:    node.term,
+		command: command,
+		Args:    args,
+	}
+	node.log = append(node.log, entry)
+
+	for _, peer := range node.peers {
+		go func(peer string) {
+			args := &AppendEntriesArgs{
+				Term:         node.term,
+				LeaderID:     node.id,
+				PrevLogIndex: len(node.log) - 2,
+				PrevLogTerm:  node.getLastLogTerm(),
+				Entries:      []LogEntry{entry},
+				LeaderCommit: node.commitIndex,
+			}
+			reply := &AppendEntriesReply{}
+
+			client, err := rpc.Dial("tcp", peer)
+			if err != nil {
+				log.Printf("Failed to connect to peer %s: %v\n", peer, err)
+				return
+			}
+			defer client.Close()
+
+			err = client.Call("RaftNode.AppendEntries", args, reply)
+			if err != nil {
+				log.Printf("Error during AppendEntries RPC to %s: %v\n", peer, err)
+				return
+			}
+
+			if reply.Success {
+				node.mu.Lock()
+				node.matchIndex[peer] = len(node.log) - 1
+				node.nextIndex[peer] = len(node.log)
+				node.mu.Unlock()
+			} else if reply.Term > node.term {
+				node.mu.Lock()
+				node.term = reply.Term
+				node.state = "follower"
+				node.votedFor = ""
+				node.mu.Unlock()
+				node.electionTimer.Reset(node.timeout)
+			}
+		}(peer)
+	}
+
+	node.commitIndex++
+	node.ApplyLog(entry)
+	return nil
 }
