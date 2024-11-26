@@ -7,6 +7,8 @@ import (
 	"net/rpc"
 	"sync"
 	"time"
+
+	"/home/tsoien/github/Research-Group/Soft_Eng_Research/Blockchain_Core/chaincode"
 )
 
 type RaftNode struct {
@@ -310,10 +312,10 @@ func (node *RaftNode) ApplyLog(entry LogEntry) {
 		age := entry.Args[3].(int)
 		birthDate := entry.Args[4].(time.Time)
 		studentNum := entry.Args[5].(int)
-		chain := entry.Args[6].(*StudentChain)
+		chain := entry.Args[6].(*chaincode.StudentChain)
 
 		// Execute the chaincode function
-		student := AddNewStudent(id, firstName, lastName, age, birthDate, studentNum, chain)
+		student := chaincode.AddNewStudent(id, firstName, lastName, age, birthDate, studentNum, chain)
 		fmt.Printf("Added new student: %v\n", student)
 
 	case "UpdateStudentCredentials":
@@ -323,8 +325,8 @@ func (node *RaftNode) ApplyLog(entry LogEntry) {
 		}
 
 		id := entry.Args[0].(int)
-		newCredential := entry.Args[1].(Credential)
-		chain := entry.Args[2].(*StudentChain)
+		newCredential := entry.Args[1].(chaincode.Credential)
+		chain := entry.Args[2].(*chaincode.StudentChain)
 
 		success := chain.UpdateStudentCredentials(id, newCredential)
 		if success {
