@@ -1,9 +1,10 @@
 package main
 
 import (
-	"api/handlers"
 	"log"
 	"net/http"
+
+	"github.com/TsoiEn/Research-Group/Soft_Eng_Research/API/handlers"
 )
 
 func main() {
