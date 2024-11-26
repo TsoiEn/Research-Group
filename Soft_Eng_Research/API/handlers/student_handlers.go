@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 	"time"
+
+	node "github.com/TsoiEn/Research-Group/Soft_Eng_Research/consensus"
 )
 
 func AddNewStudentAPI(w http.ResponseWriter, r *http.Request) {
@@ -21,15 +23,21 @@ func AddNewStudentAPI(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Interact with the blockchain via node.SubmitTransaction
-	err = node.SubmitTransaction("AddNewStudent", []interface{}{
-		studentData.ID,
-		studentData.FirstName,
-		studentData.LastName,
-		studentData.Age,
-		studentData.DOB,
-		studentData.StudentID,
-	})
+	// Create the transaction payload
+	transaction := map[string]interface{}{
+		"action": "AddNewStudent",
+		"data": []interface{}{
+			studentData.ID,
+			studentData.FirstName,
+			studentData.LastName,
+			studentData.Age,
+			studentData.DOB,
+			studentData.StudentID,
+		},
+	}
+
+	// Submit the transaction through Raft consensus
+	err = node.ProposeTransaction(transaction) // Call your Raft consensus logic
 	if err != nil {
 		http.Error(w, "Failed to add new student", http.StatusInternalServerError)
 		return
