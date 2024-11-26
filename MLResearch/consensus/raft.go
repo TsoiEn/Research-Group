@@ -36,7 +36,6 @@ type RaftNode struct {
 type LogEntry struct {
 	term    int
 	command string
-	Args    []interface{}
 }
 
 type AppendEntriesArgs struct {
@@ -288,72 +287,9 @@ func (node *RaftNode) Commit() {
 		node.ApplyLog(entry)
 	}
 }
-
 func (node *RaftNode) ApplyLog(entry LogEntry) {
+	// Apply log entry to state machine (e.g., update the database, etc.)
 	fmt.Printf("Applying log entry: %v\n", entry)
-
-	switch entry.Command {
-	case "AddNewStudent":
-		// Extract arguments from the log entry
-		if len(entry.Args) != 7 {
-			fmt.Println("Invalid arguments for AddNewStudent")
-			return
-		}
-
-		id := entry.Args[0].(int)
-		firstName := entry.Args[1].(string)
-		lastName := entry.Args[2].(string)
-		age := entry.Args[3].(int)
-		birthDate := entry.Args[4].(time.Time)
-		studentNum := entry.Args[5].(int)
-		chain := entry.Args[6].(*StudentChain)
-
-		// Execute the chaincode function
-		student := AddNewStudent(id, firstName, lastName, age, birthDate, studentNum, chain)
-		fmt.Printf("Added new student: %v\n", student)
-
-	case "UpdateStudentCredentials":
-		if len(entry.Args) != 3 {
-			fmt.Println("Invalid arguments for UpdateStudentCredentials")
-			return
-		}
-
-		id := entry.Args[0].(int)
-		newCredential := entry.Args[1].(Credential)
-		chain := entry.Args[2].(*StudentChain)
-
-		success := chain.UpdateStudentCredentials(id, newCredential)
-		if success {
-			fmt.Printf("Updated credentials for student ID %d\n", id)
-		} else {
-			fmt.Printf("Failed to update credentials for student ID %d\n", id)
-		}
-
-	default:
-		fmt.Printf("Unknown command: %s\n", entry.Command)
-	}
-}
-
-func (node *RaftNode) SubmitTransaction(command string, args []interface{}) {
-	entry := LogEntry{
-		Term:    node.term,
-		Command: command,
-		Args:    args,
-	}
-
-	node.mu.Lock()
-	node.log = append(node.log, entry)
-	node.mu.Unlock()
-
-	fmt.Printf("Transaction submitted: %v\n", entry)
-
-	chain := &StudentChain{} // Initialize or reference your blockchain state
-	node.SubmitTransaction("AddNewStudent", []interface{}{1, "John", "Doe", 20, time.Now(), 12345, chain})
-
-	newCredential := Credential{ /* Fill in the credential details */ }
-	chain := &StudentChain{}
-	node.SubmitTransaction("UpdateStudentCredentials", []interface{}{1, newCredential, chain})
-
 }
 
 func (node *RaftNode) Metrics() map[string]interface{} {
