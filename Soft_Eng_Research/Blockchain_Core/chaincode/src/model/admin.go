@@ -2,7 +2,9 @@ package model
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
+	"net/http"
 	"time"
 )
 
@@ -11,20 +13,38 @@ type Admin struct {
 	Name    string `json:"name"`
 }
 
-func (a *Admin) AddNewStudent(id int, firstName, lastName string, age int, birthDate time.Time, studentNum int, chain *StudentChain) *Student {
-	student := &Student{
-		StudentID:   id,
-		FirstName:   firstName,
-		LastName:    lastName,
-		Age:         age,
-		BirthDate:   birthDate,
-		Credentials: []*Credential{},
+func AddNewStudentAPI(w http.ResponseWriter, r *http.Request) {
+	// Parse request body to extract student data
+	var studentData struct {
+		ID        int       `json:"id"`
+		FirstName string    `json:"first_name"`
+		LastName  string    `json:"last_name"`
+		Age       int       `json:"age"`
+		DOB       time.Time `json:"dob"`
+		StudentID int       `json:"student_id"`
+	}
+	json.NewDecoder(r.Body).Decode(&studentData)
+
+	// Create a new instance of the blockchain state
+	chain := &StudentChain{}
+
+	// Submit the transaction to the Raft node
+	err := node.SubmitTransaction("AddNewStudent", []interface{}{
+		studentData.ID,
+		studentData.FirstName,
+		studentData.LastName,
+		studentData.Age,
+		studentData.DOB,
+		studentData.StudentID,
+		chain,
+	})
+	if err != nil {
+		http.Error(w, "Failed to add new student", http.StatusInternalServerError)
+		return
 	}
 
-	// Add the student to the StudentChain
-	chain.Students = append(chain.Students, student)
-
-	return student
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("New student added successfully"))
 }
 
 // AddCredentialAdmin adds a new academic credential to the student's list of academic credentials
