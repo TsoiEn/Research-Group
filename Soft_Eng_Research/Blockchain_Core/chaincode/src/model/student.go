@@ -7,16 +7,16 @@ import (
 )
 
 type Student struct {
-	StudentID   int    `json:"student_id"`
-	LastName    string `json:"last_name"`
-	FirstName   string `json:"first_name"`
-	Age         int
+	ID          int           `json:"user_id"`
+	LastName    string        `json:"last_name"`
+	FirstName   string        `json:"first_name"`
 	BirthDate   time.Time     `json:"birth_date"`
+	StudentID   int           `json:"student_id"`
 	Credentials []*Credential `json:"credentials,omitempty"`
 }
 
 type StudentChain struct {
-	Students []*Student
+	Students map[int]*Student
 }
 
 // AddCredential adds a new credential to the student's list of non-academic credentials
@@ -76,5 +76,3 @@ func (chain *StudentChain) FindStudentByID(id int) (*Student, error) {
 	}
 	return nil, fmt.Errorf("Student not found")
 }
-
-// DeleteCredential removes a credential from the student's list
