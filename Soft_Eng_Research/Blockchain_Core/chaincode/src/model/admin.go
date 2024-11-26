@@ -16,14 +16,12 @@ func (a *Admin) AddNewStudent(id int, firstName, lastName string, age int, birth
 		StudentID:   id,
 		FirstName:   firstName,
 		LastName:    lastName,
-		Age:         age,
 		BirthDate:   birthDate,
 		Credentials: []*Credential{},
 	}
 
 	// Add the student to the StudentChain
-	chain.Students = append(chain.Students, student)
-
+	chain.Students[student.StudentID] = student
 	return student
 }
 
