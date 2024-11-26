@@ -23,7 +23,7 @@ func testAdminOperations() {
 
 	// Simulate adding a new student
 	fmt.Println("Testing AddNewStudent...")
-	newStudent := admin.AddNewStudent(202013432, "John", "Doe", 21, time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC), 1, studentChain)
+	newStudent := admin.AddNewStudent(202013432, "John", "Doe", time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC), 1, studentChain)
 	if newStudent != nil {
 		studentChain.Students[newStudent.StudentID] = newStudent
 		fmt.Println("AddNewStudent passed:", newStudent)

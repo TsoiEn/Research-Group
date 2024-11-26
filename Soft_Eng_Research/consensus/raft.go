@@ -314,7 +314,7 @@ func (node *RaftNode) ApplyLog(entry LogEntry) {
 		chain := entry.Args[6].(*model.StudentChain)
 
 		// Execute the chaincode function
-		student := chain.AddNewStudent(id, firstName, lastName, birthDate, studentNum, chain)
+		student := model.AddNewStudent(id, firstName, lastName, birthDate, studentNum, chain)
 		fmt.Printf("Added new student: %v\n", student)
 
 	case "UpdateStudentCredentials":

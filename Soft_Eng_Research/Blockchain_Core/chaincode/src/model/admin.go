@@ -11,7 +11,7 @@ type Admin struct {
 	Name    string `json:"name"`
 }
 
-func AddNewStudent(id int, firstName, lastName string, birthDate time.Time, studentNum int, chain *StudentChain) *Student {
+func (a *Admin) AddNewStudent(id int, firstName, lastName string, birthDate time.Time, studentNum int, chain *StudentChain) *Student {
 	if chain.Students == nil {
 		chain.Students = make(map[int]*Student)
 	}
