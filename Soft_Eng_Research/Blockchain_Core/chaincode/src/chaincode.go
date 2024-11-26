@@ -2,56 +2,47 @@ package src
 
 import (
 	"fmt"
+	"log"
 
 	model "github.com/TsoiEn/Research-Group/Soft_Eng_Research/Blockchain_Core/chaincode/src/model"
-	"github.com/hyperledger/fabric-contract-api-go/contractapi"
 )
 
-type SmartContract struct {
-	contractapi.Contract
+type Blockchain struct {
+	Blocks []*model.Block
 }
 
-func (s *SmartContract) InitLedger(ctx contractapi.TransactionContextInterface) error {
-	blocks := []model.Block{
-		*model.CreateBlock(1, []byte("Genesis Block"), []byte("")),
-	}
+// Initialize the blockchain with a genesis block.
+func (bc *Blockchain) InitLedger() error {
+	// Create the genesis block.
+	genesisBlock := model.CreateBlock(1, []byte("Genesis Block"), []byte(""))
 
-	for _, block := range blocks {
-		serializedBlock, err := block.Serialize()
-		if err != nil {
-			return fmt.Errorf("failed to serialize block: %v", err)
-		}
-		err = ctx.GetStub().PutState(string(block.Hash), serializedBlock)
-		if err != nil {
-			return fmt.Errorf("failed to put block in ledger: %v", err)
-		}
-	}
+	// Append the genesis block to the blockchain.
+	bc.Blocks = append(bc.Blocks, genesisBlock)
+	log.Printf("Genesis block initialized: %+v", genesisBlock)
 	return nil
 }
 
-func (s *SmartContract) CreateBlock(ctx contractapi.TransactionContextInterface, blockData string) error {
-	block := model.CreateBlock(1, []byte(blockData), []byte("previousHash"))
-	existingBlock, err := ctx.GetStub().GetState(string(block.Hash))
-	if err != nil {
-		return fmt.Errorf("failed to get block: %v", err)
+// Create a new block and add it to the blockchain.
+func (bc *Blockchain) CreateBlock(data string) error {
+	if len(bc.Blocks) == 0 {
+		return fmt.Errorf("blockchain is not initialized")
 	}
-	if existingBlock != nil {
-		return fmt.Errorf("block already exists")
-	}
-	serializedBlock, err := block.Serialize()
-	if err != nil {
-		return fmt.Errorf("failed to serialize block: %v", err)
-	}
-	return ctx.GetStub().PutState(string(block.Hash), serializedBlock)
-}
 
-func main() {
-	chaincode, err := contractapi.NewChaincode(new(SmartContract))
-	if err != nil {
-		fmt.Printf("Error creating chaincode: %s", err.Error())
-		return
+	// Get the last block.
+	lastBlock := bc.Blocks[len(bc.Blocks)-1]
+
+	// Create a new block using the previous block's hash.
+	newBlock := model.CreateBlock(lastBlock.Index+1, []byte(data), lastBlock.Hash)
+
+	// Check for duplicate blocks (using hash).
+	for _, block := range bc.Blocks {
+		if string(block.Hash) == string(newBlock.Hash) {
+			return fmt.Errorf("block already exists with hash: %x", newBlock.Hash)
+		}
 	}
-	if err := chaincode.Start(); err != nil {
-		fmt.Printf("Error starting chaincode: %s", err.Error())
-	}
+
+	// Append the new block to the blockchain.
+	bc.Blocks = append(bc.Blocks, newBlock)
+	log.Printf("New block created: %+v", newBlock)
+	return nil
 }
