@@ -9,19 +9,25 @@
 
 body {
     display: flex;
-    justify-content: center;
+    justify-content: right;
+    padding: 10px 350px 10px 10px ;
     align-items: center;
     min-height: 100vh;
     background: linear-gradient(rgba(20, 20, 20, 0.3), rgba(20, 20, 20, 0.6)), 
-                url('../ayuntamiento.jpg');
+                url('SchoolBG.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    
+}
+
+.logo {
+    border-radius: 4px 0px 0px 4px;
+    padding: 99px 120px 99px 99px;
+    background: #72A0C1;
 }
 
 .wrapper {
-    width: 500px;
+    width: 600px;
     border-radius: 4px;
     overflow: hidden;
 }
@@ -43,7 +49,7 @@ body {
     font-size: 16px;
 }
 
-.dlsud-seal {
+.seal {
     position: absolute;
     top: 20px;
     right: 20px;
@@ -89,7 +95,7 @@ body {
 .lower-wrapper .btn {
     width: 100%;
     height: 45px;
-    background: #4aaf51;
+    background: #72A0C1;
     border: none;
     outline: none;
     border-radius: 40px;
@@ -117,7 +123,7 @@ body {
 }
 
 .options a {
-    color: #4aaf51;
+    color: #72A0C1;
     text-decoration: none;
 }
 
@@ -132,11 +138,14 @@ body {
     padding-top: 5%;
 }
 
-.portal .alumni {
+.portal .student {
     color: black;
     font-weight: bold;
 }
 
+.portal .student:hover {
+    text-decoration: none;
+}
 
 .portal a {
     color: #555;
