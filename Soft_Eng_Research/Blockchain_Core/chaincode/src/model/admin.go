@@ -22,7 +22,6 @@ func (a *Admin) AddNewStudent(id int, firstName, lastName string, age int, birth
 
 	// Add the student to the StudentChain
 	chain.Students[student.StudentID] = student
-
 	return student
 }
 

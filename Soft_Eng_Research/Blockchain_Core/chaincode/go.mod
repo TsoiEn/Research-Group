@@ -1,6 +1,6 @@
 module github.com/TsoiEn/Research-Group/Soft_Eng_Research/Blockchain_Core/chaincode
 
-go 1.22.4
+go 1.23.2
 
 require github.com/hyperledger/fabric-contract-api-go v1.2.2
 
