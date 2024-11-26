@@ -1,0 +1,11 @@
+[
+  {
+    "applyTo": "admin.css",
+    "headers": [
+      {
+        "name": "content-type",
+        "value": "text/css; charset=utf-8"
+      }
+    ]
+  }
+]

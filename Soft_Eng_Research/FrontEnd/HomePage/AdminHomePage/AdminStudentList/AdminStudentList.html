@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE-edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Student Credentials</title>
+    <link rel="stylesheet" href="/login/AdminStudentList/AdminStudentList.css">
+    <script defer src="/login/AdminStudentList/script.js"></script>
+</head>
+
+<body>
+    <div class="header">
+        <h1>Admin</h1>
+    </div>
+    <div class="banner"></div>
+    <nav class="navbar">
+        <ul>
+            <li><a1 href="#">Student List</a1></li>
+            <li><a href="../home/admincredentialmanager">Credentials</a></li>
+        </ul>
+    </nav>
+    <div class="background">
+        <div class="credentials-container">
+            <section id="student-list-section">
+                <table id="student-table">
+                    <thead>
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Course</th>
+                            <th>Last Name</th>
+                            <th>First Name</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{range .}}
+                        <tr>
+                            <!-- Rows will be dynamically added here -->
+                            <td>{{.StudentID}}</td>
+                            <td>{{.Course}}</td>
+                            <td>{{.LastName}}</td>
+                            <td>{{.FirstName}}</td>
+                            <td>{{.Email}}</td>
+                        </tr>
+                        {{end}}
+                    </tbody>
+                </table>
+                <button id="add-student-btn">Add Student</button>
+            </section>
+        </div>
+    </div>
+
+</body>
+</html>

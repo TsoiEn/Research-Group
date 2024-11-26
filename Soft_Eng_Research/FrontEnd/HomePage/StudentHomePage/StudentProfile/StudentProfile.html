@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Student Credentials</title>
+    <link rel="stylesheet" href="/login/StudentProfile/StudentProfile.css">
+</head>
+</html>
+<body>
+    <div class="header">
+        <h1>Student Credentials</h1>
+    </div>
+    <div class="banner">
+        
+    </div>
+    <nav class="navbar">
+        <ul>
+            <li><a1 href="#">Profile</a1></li>
+            <li><a href="../home/studentcredentials">Credentials</a></li>
+        </ul>
+    </nav>
+    <div class="content">
+        <div class="profile-details">
+            <div class="info-box">
+                <p>Student ID: {{.StudentID}}</p>
+                <p>Course: {{.Course}}</p>
+                <p>Fullname: {{.Fullname}}</p>
+                <p>Email: {{.Email}}</p>
+            </div>
+        </div>
+        <div class="profile-pic">
+            <img src='/login/StudentProfile/rotonda.jpg' alt="Profile Icon">
+        </div>
+    </div>
+    
+
+
+</body>
+</html>

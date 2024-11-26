@@ -11,3 +11,6 @@
 **Figma link for prototyping**
    - https://www.figma.com/design/E197TyIRLwQaLJwaRsSoMF/Software_Engineering_Blockchain_Project?node-id=0-1&node-type=canvas&t=mfM4FcjS0oRCsZxw-0
 
+**paper links**
+softEng: https://docs.google.com/document/d/1IpUSz-dpYngEYs53_rfCYm5aaxLCi4jvLuHQURZ9FHQ/edit?tab=t.0
+ML: https://docs.google.com/document/d/1XEFGpsMS9Y08JeB587mfbLNnmzEXCQuPNoeS9KNaQrA/edit?tab=t.0
