@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"/home/tsoien/github/Research-Group/Soft_Eng_Research/Blockchain_Core/chaincode"
+	"github.com/TsoiEn/Research-Group/Soft_Eng_Research/Blockchain_Core/chaincode"
 )
 
 type RaftNode struct {
