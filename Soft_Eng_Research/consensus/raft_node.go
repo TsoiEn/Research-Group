@@ -420,30 +420,30 @@ func (node *RaftNode) HandleVoteResponse(reply *RequestVoteReply) {
 	}
 }
 
-func (node *RaftNode) CommitTransaction(command string, args []interface{}) error {
-	node.mu.Lock()
-	defer node.mu.Unlock()
+func (rn *RaftNode) CommitTransaction(command string, args []interface{}) error {
+	rn.mu.Lock()
+	defer rn.mu.Unlock()
 
-	if !node.isLeader() {
+	if !rn.isLeader() {
 		return errors.New("this node is not the leader")
 	}
 
 	entry := LogEntry{
-		term:    node.term,
+		term:    rn.term,
 		command: command,
 		Args:    args,
 	}
-	node.log = append(node.log, entry)
+	rn.log = append(rn.log, entry)
 
-	for _, peer := range node.peers {
+	for _, peer := range rn.peers {
 		go func(peer string) {
 			args := &AppendEntriesArgs{
-				Term:         node.term,
-				LeaderID:     node.id,
-				PrevLogIndex: len(node.log) - 2,
-				PrevLogTerm:  node.getLastLogTerm(),
+				Term:         rn.term,
+				LeaderID:     rn.id,
+				PrevLogIndex: len(rn.log) - 2,
+				PrevLogTerm:  rn.getLastLogTerm(),
 				Entries:      []LogEntry{entry},
-				LeaderCommit: node.commitIndex,
+				LeaderCommit: rn.commitIndex,
 			}
 			reply := &AppendEntriesReply{}
 
@@ -461,22 +461,22 @@ func (node *RaftNode) CommitTransaction(command string, args []interface{}) erro
 			}
 
 			if reply.Success {
-				node.mu.Lock()
-				node.matchIndex[peer] = len(node.log) - 1
-				node.nextIndex[peer] = len(node.log)
-				node.mu.Unlock()
-			} else if reply.Term > node.term {
-				node.mu.Lock()
-				node.term = reply.Term
-				node.state = "follower"
-				node.votedFor = ""
-				node.mu.Unlock()
-				node.electionTimer.Reset(node.timeout)
+				rn.mu.Lock()
+				rn.matchIndex[peer] = len(rn.log) - 1
+				rn.nextIndex[peer] = len(rn.log)
+				rn.mu.Unlock()
+			} else if reply.Term > rn.term {
+				rn.mu.Lock()
+				rn.term = reply.Term
+				rn.state = "follower"
+				rn.votedFor = ""
+				rn.mu.Unlock()
+				rn.electionTimer.Reset(rn.timeout)
 			}
 		}(peer)
 	}
 
-	node.commitIndex++
-	node.ApplyLog(entry)
+	rn.commitIndex++
+	rn.ApplyLog(entry)
 	return nil
 }
