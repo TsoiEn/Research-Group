@@ -36,7 +36,6 @@ type RaftNode struct {
 	MaxRetries         int
 	currentState       map[string]interface{} // Simulated blockchain state
 	otherNodes         []string               // Addresses of other nodes
-	transactionCh      chan map[string]interface{}
 }
 
 type LogEntry struct {
@@ -296,6 +295,7 @@ func (node *RaftNode) Commit() {
 }
 
 func (node *RaftNode) ApplyLog(entry LogEntry) {
+	admin := &model.Admin{}
 	fmt.Printf("Applying log entry: %v\n", entry)
 
 	switch entry.command {
@@ -314,7 +314,7 @@ func (node *RaftNode) ApplyLog(entry LogEntry) {
 		chain := entry.Args[6].(*model.StudentChain)
 
 		// Execute the chaincode function
-		student := model.AddNewStudent(id, firstName, lastName, birthDate, studentNum, chain)
+		student := admin.AddNewStudent(id, firstName, lastName, studentNum, birthDate, 0, chain)
 		fmt.Printf("Added new student: %v\n", student)
 
 	case "UpdateStudentCredentials":
@@ -367,7 +367,7 @@ func (rn *RaftNode) ProposeTransaction(transaction map[string]interface{}) error
 	return nil
 }
 
-func (rn *RaftNode) replicateTransaction(transaction map[string]interface{}) error {
+func (rn *RaftNode) replicateTransaction(_ map[string]interface{}) error {
 	for _, nodeAddress := range rn.otherNodes {
 		// Send the transaction to the other nodes (simulate with HTTP or gRPC)
 		// Example: HTTP POST to replicate the transaction
@@ -389,6 +389,8 @@ func (rn *RaftNode) isLeader() bool {
 	return rn.leaderID == rn.id // Check if this node is the leader
 }
 
+var studentChain = &model.StudentChain{}
+
 func (node *RaftNode) SubmitTransaction(command string, args []interface{}) {
 	entry := LogEntry{
 		term:    node.term,
@@ -402,12 +404,20 @@ func (node *RaftNode) SubmitTransaction(command string, args []interface{}) {
 
 	fmt.Printf("Transaction submitted: %v\n", entry)
 
-	chain := &StudentChain{} // Initialize or reference your blockchain state
-	node.SubmitTransaction("AddNewStudent", []interface{}{1, "John", "Doe", 20, time.Now(), 12345, chain})
+	chain := studentChain // Initialize or reference your blockchain state
 
-	newCredential := Credential{ /* Fill in the credential details */ }
-	chain = &StudentChain{}
-	node.SubmitTransaction("UpdateStudentCredentials", []interface{}{1, newCredential, chain})
+	node.log = append(node.log, LogEntry{
+		term:    node.term,
+		command: "AddNewStudent",
+		Args:    []interface{}{1, "John", "Doe", 20, time.Now(), 12345, chain},
+	})
+
+	newCredential := model.Credential{ /* Fill in the credential details */ }
+	node.log = append(node.log, LogEntry{
+		term:    node.term,
+		command: "UpdateStudentCredentials",
+		Args:    []interface{}{1, newCredential, chain},
+	})
 
 }
 
