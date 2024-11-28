@@ -97,33 +97,20 @@ main {
     padding: 20px;
 }
 
-#student-table {
+#analysis-table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
 }
 
-#student-table th, #student-table td {
+#analysis-table th, #analysis-table td {
     background-color: #fff;
     border: 1px solid #d3d3d3;
     padding: 8px;
     text-align: center;
 }
 
-#student-table th {
+#analysis-table th {
     background-color: #fff;
     color: rgb(0, 0, 0);
-}
-
-#add-student-btn {
-    background: #226a8b;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 3px;
-}
-
-#add-student-btn:hover {
-    background: #3fa4d3;
 }
