@@ -14,23 +14,15 @@ Name: Frank E Martinez, Age: 24, ID: 202203708, Email: mfe3708@example.edu.ph, P
 blockchain/
 ├── chaincode/
 │   ├── src/
-│   │   ├── chaincode.go         # Main chaincode logic
-│   │   ├── model/
-│   │   │   ├── block.go         # Model files as dependencies
-│   │   │   ├── admin.go
-│   │   │   ├── credential.go
-│   │   │   ├── student.go
-│   │   │   ├── utils.go         # Optional utility functions
-│   │   ├── go.mod               # Module dependencies specific to chaincode
-│   │   ├── go.sum
-├── consensus/                  # Raft-related files
-│   ├── raft.go                 # Main Raft logic
-│   ├── raft_node.go            # Raft node management
-│   ├── raft_helpers.go         # Helper functions for Raft
-│   └── raft_config.go          # Raft configuration setup
-├── api/
-                  # Used for testing but 
-
+│       ├── chaincode.go         # Main chaincode logic
+│       ├── model/
+│       │   ├── block.go         # Model files as dependencies
+│       │   ├── admin.go
+│       │   ├── credential.go
+│       │   ├── student.go
+│       │   ├── utils.go         
+├── go.mod
+├── go.sum
 
 ### admin.go responsibilities
 

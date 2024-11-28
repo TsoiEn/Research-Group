@@ -21,6 +21,11 @@ type StudentChain struct {
 
 // AddCredential adds a new credential to the student's list of non-academic credentials
 func (s *Student) AddCredential(credentialType CredentialType, issuer string, dataIssued time.Time) bool {
+	// Check if the credential type is valid
+	if credentialType != NonAcademic && credentialType != Academic {
+		return false //fmt.Errorf("invalid credential type")
+	}
+
 	// Check if the credential type is non-academic
 	if credentialType != NonAcademic {
 		return false //fmt.Errorf("only non-academic credentials can be added")
@@ -50,12 +55,12 @@ func (s *Student) AddCredential(credentialType CredentialType, issuer string, da
 func (chain *StudentChain) UpdateStudentCredentials(id int, newCredential Credential) bool {
 	student, err := chain.FindStudentByID(id)
 	if err != nil {
-		return true
+		return false // Student not found
 	}
 
 	// Check if the credential already exists by comparing hashes
 	for _, cred := range student.Credentials {
-		if bytes.Equal(cred.Hash, newCredential.Hash) {
+		if bytes.Equal(cred.Hash, newCredential.Hash) && cred.Type == newCredential.Type && cred.Issuer == newCredential.Issuer && cred.DateIssued.Equal(newCredential.DateIssued) {
 			return false //fmt.Errorf("Credential already exists")
 		}
 	}
