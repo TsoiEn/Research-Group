@@ -25,7 +25,7 @@ func testAdminOperations() {
 	fmt.Println("Testing AddNewStudent...")
 	newStudent := admin.AddNewStudent(202013432, "John", "Doe", 21, time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC), 1, studentChain)
 	if newStudent != nil {
-		studentChain.Students = append(studentChain.Students, newStudent)
+		studentChain.Students[newStudent.StudentID] = newStudent
 		fmt.Println("AddNewStudent passed:", newStudent)
 	} else {
 		fmt.Println("AddNewStudent failed.")
@@ -64,7 +64,6 @@ func testStudentOperations() {
 		StudentID:   202013432,
 		FirstName:   "John",
 		LastName:    "Doe",
-		Age:         21,
 		BirthDate:   time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC),
 		Credentials: []*model.Credential{},
 	}
