@@ -118,16 +118,3 @@ main {
     background-color: #fff;
     color: rgb(0, 0, 0);
 }
-
-#add-student-btn {
-    background: #226a8b;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 3px;
-}
-
-#add-student-btn:hover {
-    background: #3fa4d3;
-}

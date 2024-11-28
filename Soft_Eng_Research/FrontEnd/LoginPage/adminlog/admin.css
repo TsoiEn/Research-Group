@@ -138,12 +138,12 @@ body {
     padding-top: 5%;
 }
 
-.portal .student {
+.portal .admin {
     color: black;
     font-weight: bold;
 }
 
-.portal .student:hover {
+.portal .admin:hover {
     text-decoration: none;
 }
 
