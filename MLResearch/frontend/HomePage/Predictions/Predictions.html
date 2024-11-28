@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE-edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Student Credentials</title>
-    <link rel="stylesheet" href="homepage.css">
+    <link rel="stylesheet" href="Predictions.css">
     <script defer src="script.js"></script>
 </head>
 
@@ -16,38 +16,38 @@
     </div>
     <nav class="navbar">
         <ul>
-            <li><a1 href="#">Records</a1></li>
-            <li><a href="#">Analysis</a></li>
-            <li><a href="#">Predictions</a></li>
+            <li><a href="../PatientRecords/patientrec.html">Records</a></li>
+            <li><a href="../Analysis/Analysis.html">Analysis</a></li>
+            <li><a1 href="#">Predictions</a1></li>
         </ul>
     </nav>
     <div class="background">
         <div class="credentials-container">
-            <section id="student-list-section">
-                <table id="student-table">
+            <section id="prediction-list-section">
+                <table id="prediction-table">
                     <thead>
                         <tr>
-                            <th>Student ID</th>
-                            <th>Course</th>
+                            <th>Patient ID</th>
                             <th>Last Name</th>
                             <th>First Name</th>
-                            <th>Email</th>
+                            <th>Disease</th>
+                            <th>Prediction</th>
                         </tr>
                     </thead>
                     <tbody>
                         {{range .}}
                         <tr>
                             <!-- Rows will be dynamically added here -->
-                            <td>{{.StudentID}}</td>
-                            <td>{{.Course}}</td>
+                            <td>{{.PatientID}}</td>
                             <td>{{.LastName}}</td>
                             <td>{{.FirstName}}</td>
-                            <td>{{.Email}}</td>
+                            <td>{{.Disease}}</td>
+                            <td>{{.Prediction}}</td>
                         </tr>
                         {{end}}
                     </tbody>
                 </table>
-                <button id="add-student-btn">Add Student</button>
+                <button id="add-btn">Add Prediction</button>
             </section>
         </div>
     </div>
