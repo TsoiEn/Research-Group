@@ -14,7 +14,7 @@ body {
     align-items: center;
     min-height: 100vh;
     background: linear-gradient(rgba(20, 20, 20, 0.3), rgba(20, 20, 20, 0.6)), 
-                url('SchoolBG.jpg');
+                url('../SchoolBG.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -138,12 +138,12 @@ body {
     padding-top: 5%;
 }
 
-.portal .student {
+.portal .alumni {
     color: black;
     font-weight: bold;
 }
 
-.portal .student:hover {
+.portal .alumni:hover {
     text-decoration: none;
 }
 

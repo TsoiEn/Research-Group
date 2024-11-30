@@ -13,9 +13,20 @@ body {
 }
 
 .header {
+    display: flex;
     background-color: #377eb1;
     padding: 15px;
     text-align: left;
+}
+
+.header a {
+    text-decoration: none;
+    border-radius: 4px;
+    padding: 2px;
+    background-color: #226a8b;
+    margin: 8px 1px 8px 1px;
+    color: #fff;
+    font-size: 12px;
 }
 
 .header h1 {
@@ -117,17 +128,4 @@ main {
 #student-table th {
     background-color: #fff;
     color: rgb(0, 0, 0);
-}
-
-#add-student-btn {
-    background: #226a8b;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 3px;
-}
-
-#add-student-btn:hover {
-    background: #3fa4d3;
 }
