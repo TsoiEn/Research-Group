@@ -19,6 +19,10 @@
     <nav class="navbar">
         <ul>
             <li><a1 href="#">Student List</a1></li>
+
+
+            <!-- <li><a href="#">Credentials</a></li> -->
+
         </ul>
     </nav>
     <div class="background">
@@ -37,10 +41,16 @@
                     <tbody>
                         {{range .}}
                         <tr>
+
                             <!-- Rows will be dynamically added here -->
                             <td>
                                 <a href="../home/admincredentials?studentID={{.StudentID}}">
                                     {{.StudentID}}
+
+                            <td>
+                                <a href="/home/admincredentials?studentID={{.StudentID}}">{{.StudentID}}
+                                    
+
                                 </a>
                             </td>
                             <td>{{.Course}}</td>
@@ -51,7 +61,7 @@
                         {{end}}
                     </tbody>
                 </table>
-                
+
             </section>
         </div>
     </div>
