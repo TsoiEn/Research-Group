@@ -34,6 +34,16 @@ func (b *Block) DeriveHash() {
 	b.Hash = hash[:]
 }
 
+// SetPrevHash sets the previous hash for the block.
+func (b *Block) SetPrevHash(prevHash []byte) {
+	if len(prevHash) == 0 {
+		genesisBlock := Genesis()
+		b.PrevHash = genesisBlock.Hash
+	} else {
+		b.PrevHash = prevHash
+	}
+}
+
 // CreateBlock creates a new block with the given data and previous hash.
 func CreateBlock(index int, blockData []byte, prevHash []byte) *Block {
 	block := &Block{
@@ -48,7 +58,21 @@ func CreateBlock(index int, blockData []byte, prevHash []byte) *Block {
 
 // AddBlock adds a new block to the blockchain.
 func (chain *BlockChain) AddBlock(blockData []byte) {
+	if len(chain.Blocks) == 0 {
+		fmt.Println("Blockchain is empty, adding Genesis block first.")
+		genesisBlock := Genesis()
+		chain.Blocks = append(chain.Blocks, *genesisBlock)
+	}
+
 	prevBlock := chain.Blocks[len(chain.Blocks)-1]
+
+	// Validate the previous block's hash
+	prevBlock.DeriveHash()
+	if !bytes.Equal(prevBlock.Hash, prevBlock.Hash) {
+		fmt.Println("Previous block's hash is invalid.")
+		return
+	}
+
 	newIndex := prevBlock.Index + 1
 	newBlock := CreateBlock(newIndex, blockData, prevBlock.Hash)
 	chain.Blocks = append(chain.Blocks, *newBlock)
