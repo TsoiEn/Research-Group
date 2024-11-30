@@ -5,25 +5,22 @@
     <meta charset="UTF=8">
     <meta http-equiv="X-UA-Compatible" content="IE-edge">
     <meta name="viewport" content="width-device-width, initial-scale=1.0">
-    <title>Admin Login</title>
-    <link rel="stylesheet" type="text/css" href="/login/adminlog/admin.css">
+    <title>Student Credentials Login</title>
+    <link rel="stylesheet" type="text/css" href="login.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <script defer src="/login/adminlog/script.js"></script>
+    <script defer src="/login/script.js"></script>
 </head>
 
 <body>
     <div class="logo">
-        <img src="logo.png" width="400" height="400">
+        <img src="logo.png" width="353" height="353">
     </div>
     <div id="error"></div>
     <div class="wrapper">
-        <form action="/login/adminlogin" method="POST">
+        <form action="/login/studentlogin" method="POST">
             <div class="upper-wrapper">
                 <h1>Login</h1>
                 <p>Enter your username and password to log in</p>
-                <div class="seal">
-                    <img src="seal.png" width="60" height="auto">
-                </div>
             </div>
             <div class="lower-wrapper">
                 <div class="input-box">
@@ -40,7 +37,7 @@
                     <center>{{.ErrorMessage}}</center>
                 </div><br>
                 {{end}}
-                
+
                 <button type="submit" class="btn">Log In</button>
 
                 <div class="options">
@@ -48,11 +45,6 @@
                     <a href="#">FAQ</a>
                     <a href="#">Help</a>
                     <a href="#">Contact Us</a>
-                </div>
-                <div class="portal">
-                    <a href="/login/studentlogin" class="student">STUDENT</a>
-                    <a href="/login/alumnilogin" class="alumni">ALUMNI</a>
-                    <p class="admin">ADMIN</p>
                 </div>
             </div>
         </form>

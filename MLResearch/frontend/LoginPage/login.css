@@ -14,7 +14,7 @@ body {
     align-items: center;
     min-height: 100vh;
     background: linear-gradient(rgba(20, 20, 20, 0.3), rgba(20, 20, 20, 0.6)), 
-                url('../SchoolBG.jpg');
+                url('HospitalBG.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -47,12 +47,6 @@ body {
 .upper-wrapper p {
     padding-top: 10px;
     font-size: 16px;
-}
-
-.seal {
-    position: absolute;
-    top: 20px;
-    right: 20px;
 }
 
 .lower-wrapper {
@@ -136,22 +130,4 @@ body {
     justify-content: space-evenly;
     font-size: 16px;
     padding-top: 5%;
-}
-
-.portal .admin {
-    color: black;
-    font-weight: bold;
-}
-
-.portal .admin:hover {
-    text-decoration: none;
-}
-
-.portal a {
-    color: #555;
-    text-decoration: none;
-}
-
-.portal a:hover {
-    text-decoration: underline;
 }

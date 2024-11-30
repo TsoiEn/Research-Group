@@ -7,11 +7,8 @@ import (
 	"html/template"
 	"net/http"
 
-	"github.com/gorilla/sessions"
+	sessionHandler "Soft_Eng_Research/Database/SessionStore"
 )
-
-// Session store
-var storeStuProf = sessions.NewCookieStore([]byte("studentsessionkey"))
 
 // Handler to fetch STUDENT account information
 func studentHandler(w http.ResponseWriter, r *http.Request) {
@@ -44,7 +41,7 @@ func studentHandler(w http.ResponseWriter, r *http.Request) {
 				errorMessage = "This is not a student account."
 			} else {
 				// Store accountID in a session
-				session, _ := storeStuProf.Get(r, "student-session")
+				session, _ := sessionHandler.StoreStuProf.Get(r, "student-session")
 				session.Values["accountID"] = accountID
 				session.Save(r, w)
 

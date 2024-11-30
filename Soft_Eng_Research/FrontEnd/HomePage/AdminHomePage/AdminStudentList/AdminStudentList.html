@@ -12,13 +12,17 @@
 
 <body>
     <div class="header">
+        <a href="../login/adminlogin">Log Out</a>
         <h1>Admin</h1>
     </div>
     <div class="banner"></div>
     <nav class="navbar">
         <ul>
             <li><a1 href="#">Student List</a1></li>
-            <li><a href="../home/admincredentialmanager">Credentials</a></li>
+
+
+            <!-- <li><a href="#">Credentials</a></li> -->
+
         </ul>
     </nav>
     <div class="background">
@@ -37,8 +41,18 @@
                     <tbody>
                         {{range .}}
                         <tr>
+
                             <!-- Rows will be dynamically added here -->
-                            <td>{{.StudentID}}</td>
+                            <td>
+                                <a href="../home/admincredentials?studentID={{.StudentID}}">
+                                    {{.StudentID}}
+
+                            <td>
+                                <a href="/home/admincredentials?studentID={{.StudentID}}">{{.StudentID}}
+                                    
+
+                                </a>
+                            </td>
                             <td>{{.Course}}</td>
                             <td>{{.LastName}}</td>
                             <td>{{.FirstName}}</td>
@@ -47,7 +61,7 @@
                         {{end}}
                     </tbody>
                 </table>
-                <button id="add-student-btn">Add Student</button>
+
             </section>
         </div>
     </div>

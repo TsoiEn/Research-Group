@@ -13,9 +13,20 @@ body {
 }
 
 .header {
-    background-color: #000;
+    display: flex;
+    background-color: #377eb1;
     padding: 15px;
     text-align: left;
+}
+
+.header a {
+    text-decoration: none;
+    border-radius: 4px;
+    padding: 2px;
+    background-color: #226a8b;
+    margin: 8px 1px 8px 1px;
+    color: #fff;
+    font-size: 12px;
 }
 
 .header h1 {
@@ -24,7 +35,7 @@ body {
 }
 
 .banner {
-    background-image: url('rotonda.jpg');
+    background-image: url('SchoolBG.jpg');
     background-size: cover;
     opacity: 0.5;
     background-position: center;
@@ -34,7 +45,7 @@ body {
 
 
 .navbar {
-    background-color: #228B22;
+    background-color: #72A0C1;
     display: flex;
     justify-content: left;
     padding: 0 10px
@@ -51,7 +62,7 @@ body {
 }
 
 .navbar a1 {
-    color:#228B22;
+    color:#72A0C1;
     padding: 8px 10.5px 20px;
     border-radius: 10px;
     background-color: #fff;
@@ -64,7 +75,7 @@ body {
 }
 
 .navbar a:hover {
-    color:#228B22;
+    color:#72A0C1;
     padding: 8px 10.5px 20px;
     border-radius: 10px;
     background-color: #fff;
