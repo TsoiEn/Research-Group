@@ -18,18 +18,29 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+
+function showPDFModal(base64Data) {
+
 // Show Credential
 function showModal(base64Data) {
+
     const pdfViewer = document.getElementById('pdfViewer');
     pdfViewer.src = `data:application/pdf;base64,${base64Data}`;
     document.getElementById('pdfModal').style.display = 'block';
 }
+
+
+function closePDFModal() {
+    document.getElementById('pdfModal').style.display = 'none';
+}
+
 
 function closeModal() {
     document.getElementById('pdfModal').style.display = 'none';
 }
 
 // Add Credential (Non-Academic)
+
 function openAddCredentialModal() {
     document.getElementById("addCredentialModal").style.display = "block";
 }
@@ -38,6 +49,7 @@ function closeAddCredentialModal() {
     document.getElementById("addCredentialModal").style.display = "none";
 }
 
+
 // Close modal when clicking outside of it
 window.onclick = function(event) {
     const modal = document.getElementById('pdfModal');
@@ -45,3 +57,4 @@ window.onclick = function(event) {
         modal.style.display = 'none';
     }
 };
+

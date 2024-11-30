@@ -5,6 +5,8 @@ import (
 	"html/template"
 	"net/http"
 
+	sessionHandler "Soft_Eng_Research/Database/SessionStore"
+
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
 )
@@ -43,7 +45,8 @@ func adminStuListHandler(w http.ResponseWriter, r *http.Request) {
 	// Query to fetch all student data
 	query := `
 		SELECT
-			a.accountID AS studentID,
+			s.studentID AS studentID,
+			s.course AS course,
 			s.lname AS lastName,
 			s.fname AS firstName,
 			a.username AS email
@@ -70,13 +73,10 @@ func adminStuListHandler(w http.ResponseWriter, r *http.Request) {
 	// Loop through rows and populate the slice
 	for rows.Next() {
 		var student StudentList
-		if err := rows.Scan(&student.StudentID, &student.LastName, &student.FirstName, &student.Email); err != nil {
+		if err := rows.Scan(&student.StudentID, &student.Course, &student.LastName, &student.FirstName, &student.Email); err != nil {
 			http.Error(w, "Failed to scan student data", http.StatusInternalServerError)
 			return
 		}
-
-		// Add a placeholder for the Course field
-		student.Course = "Placeholder Course"
 
 		// Append the student to the list
 		students = append(students, student)
@@ -84,7 +84,7 @@ func adminStuListHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Check for errors from iterating over rows
 	if err := rows.Err(); err != nil {
-		http.Error(w, "Error while fetchign data", http.StatusInternalServerError)
+		http.Error(w, "Error while fetching data", http.StatusInternalServerError)
 		return
 	}
 
@@ -96,7 +96,7 @@ func adminStuListHandler(w http.ResponseWriter, r *http.Request) {
 // Handler to go into STUDENT PROFILE PAGE and fetch the specific student's information
 func stuProfHandler(w http.ResponseWriter, r *http.Request) {
 	// Retrieve session
-	session, _ := storeStuProf.Get(r, "student-session")
+	session, _ := sessionHandler.StoreStuProf.Get(r, "student-session")
 	accountID, ok := session.Values["accountID"].(string)
 	if !ok || accountID == "" {
 		http.Error(w, "Unauthorized: Account ID is missing", http.StatusUnauthorized)
@@ -118,13 +118,12 @@ func stuProfHandler(w http.ResponseWriter, r *http.Request) {
 // Handler to fetch specific student information from database
 func fetchStudentProfile(accountID string) (StudentInfo, error) {
 	var student StudentInfo
-	// No "course" in the database for now
-	student.Course = "Placeholder Course"
 
-	// Query to fetch details by joining `account` and `students` tables
+	// Query to fetch details by joining account and students tables
 	query := `
 		SELECT
 			s.studentID,
+			s.course,
 			CONCAT(s.fname, ' ', s.lname) AS fullname,
 			a.username
 		FROM
@@ -139,6 +138,7 @@ func fetchStudentProfile(accountID string) (StudentInfo, error) {
 	// Execute query and scan results into the struct
 	err := db.QueryRow(query, accountID).Scan(
 		&student.StudentID,
+		&student.Course,
 		&student.Fullname,
 		&student.Email,
 	)
