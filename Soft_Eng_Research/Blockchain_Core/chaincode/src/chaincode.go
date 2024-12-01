@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/TsoiEn/softEng/Blockchain_Core/chaincode/consensus"
-	model "github.com/TsoiEn/softEng/Blockchain_Core/chaincode/src/model"
+	"github.com/TsoiEn/Research-Group/Soft_Eng-Research/Blockchain_Core/chaincode/consensus"
+	model "github.com/TsoiEn/Research-Group/Soft_Eng-Research/Blockchain_Core/chaincode/src/model"
 )
 
 type Blockchain struct {

@@ -5,7 +5,7 @@ import (
 	"sync"
 	"time"
 
-	model "github.com/TsoiEn/softEng/Blockchain_Core/chaincode/src/model"
+	model "github.com/TsoiEn/Research-Group/Soft_Eng-Research/Blockchain_Core/chaincode/src/model"
 	"golang.org/x/exp/rand"
 )
 

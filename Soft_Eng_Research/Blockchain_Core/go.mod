@@ -1,4 +1,4 @@
-module github.com/TsoiEn/softEng/Blockchain_Core
+module github.com/TsoiEn/Research-Group/Soft_Eng-Research/Blockchain_Core
 
 go 1.23.2
 
