@@ -34,18 +34,12 @@
                         <p>Date Issued: {{$cred.dateIssued}}</p>
                         <p>Status: {{$cred.status}}</p>
                         {{if eq $cred.filetype "application/pdf"}}
-
                             <button onclick="showPDFModal('{{$cred.filedata}}')">Show PDF</button>
                         {{else}}
                             <img src="data:{{$cred.filetype}};base64,{{$cred.filedata}}" alt="Academic Credential">
                             <a href="data:{{$cred.filetype}};base64,{{$cred.filedata}}" download="Credential-{{$cred.credentialID}}.jpeg">
                                 Download
                             </a>
-
-                            <button onclick="showModal('{{$cred.filedata}}')">Show PDF</button>
-                        {{else}}
-                            <img src="data:{{$cred.filetype}};base64,{{$cred.filedata}}" alt="Academic Credential">
-
                         {{end}}
                     </div>
                     {{end}}
@@ -60,30 +54,18 @@
                         <p>Date Issued: {{$cred.dateIssued}}</p>
                         <p>Status: {{$cred.status}}</p>
                         {{if eq $cred.filetype "application/pdf"}}
-
                             <button onclick="showPDFModal('{{$cred.filedata}}')">Show PDF</button>
                         {{else}}
                             <img src="data:{{$cred.filetype}};base64,{{$cred.filedata}}" alt="Academic Credential">
                             <a href="data:{{$cred.filetype}};base64,{{$cred.filedata}}" download="Credential-{{$cred.credentialID}}.jpeg">
                                 Download
                             </a>
-
-                            <button onclick="showModal('{{$cred.filedata}}')">Show PDF</button>
-                        {{else}}
-                            <img src="data:{{$cred.filetype}};base64,{{$cred.filedata}}" alt="Non-Academic Credential">
-
                         {{end}}
                     </div>
                     {{end}}
                 </div>
 
-
                 <button class="add-btn" onclick="openAddCredentialModal()">Add Non-Academic</button>
-
-
-                <button class="add-btn" onclick="openAddCredentialModal()">
-                    Add Non-Academic
-                </button>
 
             </div>
             <div id="certificate" class="tab-content">
@@ -95,18 +77,12 @@
                         <p>Date Issued: {{$cred.dateIssued}}</p>
                         <p>Status: {{$cred.status}}</p>
                         {{if eq $cred.filetype "application/pdf"}}
-
                             <button onclick="showPDFModal('{{$cred.filedata}}')">Show PDF</button>
                         {{else}}
                             <img src="data:{{$cred.filetype}};base64,{{$cred.filedata}}" alt="Academic Credential">
                             <a href="data:{{$cred.filetype}};base64,{{$cred.filedata}}" download="Credential-{{$cred.credentialID}}.jpeg">
                                 Download
                             </a>
-
-                            <button onclick="showModal('{{$cred.filedata}}')">Show PDF</button>
-                        {{else}}
-                            <img src="data:{{$cred.filetype}};base64,{{$cred.filedata}}" alt="Certificate Credential">
-
                         {{end}}
                     </div>
                     {{end}}
@@ -117,11 +93,7 @@
         <!-- Modal for showing the PDF -->
         <div id="pdfModal" class="showModal">
             <div class="showModal-content">
-
                 <span class="close" onclick="closePDFModal()">&times;</span>
-
-                <span class="close" onclick="closeModal()">&times;</span>
-
                 <iframe id="pdfViewer" width="100%" height="600px"></iframe>
             </div>
         </div>
