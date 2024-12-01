@@ -1,4 +1,4 @@
-module github.com/TsoiEn/Research-Group/Soft_Eng-Research/Soft_Eng_Research/Database
+module github.com/TsoiEn/Research-Group/Soft_Eng_Research/Database
 
 go 1.23.2
 
@@ -10,5 +10,6 @@ require (
 
 require (
 	filippo.io/edwards25519 v1.1.0 // indirect
+	github.com/TsoiEn/Research-Group/Soft_Eng_Research/Blockchain_Core/chaincode/model v0.0.0-20241130081917-60bf666fca94
 	github.com/gorilla/securecookie v1.1.2 // indirect
 )

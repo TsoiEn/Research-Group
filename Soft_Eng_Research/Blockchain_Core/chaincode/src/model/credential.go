@@ -51,7 +51,7 @@ type CredentialChain struct {
 }
 
 // AddCredential adds a new credential to the blockchain.
-func (chain *CredentialChain) AddCredential(cred *Credential) error {
+func (chain *CredentialChain) AddCredentialModel(cred *Credential) error {
 	if err := ValidateCredentialData(cred); err != nil {
 		return err
 	}

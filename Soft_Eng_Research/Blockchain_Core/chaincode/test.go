@@ -61,7 +61,7 @@ func testAdminOperations() {
 	adminSuccess := admin.AddCredentialAdmin(newStudent, cred.Type, cred.Issuer, cred.DateIssued)
 	if adminSuccess {
 		// Add credential to the blockchain
-		err := credentialChain.AddCredential(&cred)
+		err := credentialChain.AddCredentialModel(&cred)
 		if err != nil {
 			fmt.Println("Failed to add credential to blockchain:", err)
 		} else {
@@ -109,7 +109,7 @@ func testStudentOperations() {
 	studentSuccess := student.AddCredential(cred.Type, cred.Issuer, cred.DateIssued)
 	if studentSuccess {
 		// Add credential to the blockchain
-		err := credentialChain.AddCredential(&cred)
+		err := credentialChain.AddCredentialModel(&cred)
 		if err != nil {
 			fmt.Println("Failed to add credential to blockchain:", err)
 		} else {
