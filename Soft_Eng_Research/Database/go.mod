@@ -1,4 +1,4 @@
-module Soft_Eng_Research/Database
+module github.com/TsoiEn/Research-Group/Soft_Eng-Research/Soft_Eng_Research/Database
 
 go 1.23.2
 

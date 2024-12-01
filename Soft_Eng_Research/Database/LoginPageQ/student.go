@@ -7,7 +7,7 @@ import (
 	"html/template"
 	"net/http"
 
-	sessionHandler "Soft_Eng_Research/Database/SessionStore"
+	sessionHandler "github.com/TsoiEn/Research-Group/Soft_Eng-Research/Soft_Eng_Research/Database/SessionStore"
 )
 
 // Handler to fetch STUDENT account information
