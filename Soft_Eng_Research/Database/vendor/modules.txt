@@ -2,6 +2,10 @@
 ## explicit; go 1.20
 filippo.io/edwards25519
 filippo.io/edwards25519/field
+# github.com/TsoiEn/Research-Group/Soft_Eng_Research/Blockchain_Core/chaincode v0.0.0-20241130081917-60bf666fca94
+## explicit; go 1.23.2
+github.com/TsoiEn/Research-Group/Soft_Eng_Research/Blockchain_Core/chaincode
+github.com/TsoiEn/Research-Group/Soft_Eng_Research/Blockchain_Core/chaincode/src/model
 # github.com/go-sql-driver/mysql v1.8.1
 ## explicit; go 1.18
 github.com/go-sql-driver/mysql

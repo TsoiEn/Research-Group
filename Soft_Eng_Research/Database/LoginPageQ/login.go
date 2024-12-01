@@ -5,7 +5,7 @@ import (
 	"html/template"
 	"net/http"
 
-	sessionHandler "Soft_Eng_Research/Database/SessionStore"
+	sessionHandler "github.com/TsoiEn/Research-Group/Soft_Eng_Research/Database/SessionStore"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"

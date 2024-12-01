@@ -6,9 +6,9 @@ import (
 	"log"
 	"net/http"
 
-	dbHandler "Soft_Eng_Research/Database/DB"
-	homeHandler "Soft_Eng_Research/Database/HomePageQ"
-	loginHandler "Soft_Eng_Research/Database/LoginPageQ"
+	dbHandler "github.com/TsoiEn/Research-Group/Soft_Eng_Research/Database/DB"
+	homeHandler "github.com/TsoiEn/Research-Group/Soft_Eng_Research/Database/HomePageQ"
+	loginHandler "github.com/TsoiEn/Research-Group/Soft_Eng_Research/Database/LoginPageQ"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"

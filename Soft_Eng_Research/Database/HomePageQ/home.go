@@ -9,7 +9,9 @@ import (
 	"net/http"
 	"time"
 
-	sessionHandler "Soft_Eng_Research/Database/SessionStore"
+	sessionHandler "github.com/TsoiEn/Research-Group/Soft_Eng_Research/Database/SessionStore"
+
+	"github.com/TsoiEn/Research-Group/Soft_Eng_Research/Blockchain_Core/chaincode/src/model"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
@@ -19,13 +21,13 @@ import (
 var db *sql.DB
 
 type Credential struct {
-	ID         string
-	FileData   string
-	FileType   string
-	Type       string
-	Issuer     string
-	DateIssued string
-	Status     string
+	CredentialID string `json:"credentialID"`
+	FileData     string `json:"filedata"`
+	FileType     string `json:"filetype"`
+	Type         string `json:"type"`
+	Issuer       string `json:"issuer"`
+	DateIssued   string `json:"dateIssued"`
+	Status       string `json:"status"`
 }
 
 // FOR ADMIN
@@ -90,13 +92,13 @@ func fetchStudentCredentialsByStudentID(studentID string) (map[string][]map[stri
 	return credentials, nil
 }
 
+// add credential
 func addCredential(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 		return
 	}
 
-	// Parse the form to retrieve file data
 	err := r.ParseMultipartForm(10 << 20) // Limit file size to 10 MB
 	if err != nil {
 		http.Error(w, "Unable to parse form", http.StatusBadRequest)
@@ -110,31 +112,21 @@ func addCredential(w http.ResponseWriter, r *http.Request) {
 	}
 	defer file.Close()
 
-	// Read file content
 	fileBytes, err := io.ReadAll(file)
 	if err != nil {
 		http.Error(w, "Error reading file", http.StatusInternalServerError)
 		return
 	}
 
-	// Get file type
 	filetype := handler.Header.Get("Content-Type")
-
-	// Retrieve studentID from the request form
 	studentID := r.FormValue("studentID")
 	if studentID == "" {
 		http.Error(w, "Student ID is required", http.StatusBadRequest)
 		return
 	}
 
-	// Fetch ownerID from the accounts table
 	var ownerID string
-	query := `
-		SELECT a.accountID
-		FROM accounts a
-		INNER JOIN students s ON s.userID = a.accountID
-		WHERE s.studentID = ?`
-
+	query := `SELECT a.accountID FROM accounts a INNER JOIN students s ON s.userID = a.accountID WHERE s.studentID = ?`
 	err = db.QueryRow(query, studentID).Scan(&ownerID)
 	if err != nil {
 		http.Error(w, "Error fetching account ID", http.StatusInternalServerError)
@@ -142,24 +134,16 @@ func addCredential(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var issuer string = "Admin"
-
-	// Get the credential type from the form
 	credentialType := r.FormValue("type")
 	if credentialType != "academic" && credentialType != "non-academic" && credentialType != "certificate" {
 		http.Error(w, "Invalid credential type", http.StatusBadRequest)
 		return
 	}
 
-	// Set date format
 	dateIssued := time.Now().Format("2006-01-02")
 
-	// Insert data into the database
-	query = `
-	INSERT INTO credentials (ownerID, filedata, filetype, type, issuer, date_issued, status)
-	VALUES (?, ?, ?, ?, ?, ?, 'active')`
-
-	log.Printf("ownerID: %s, fileBytes: %d bytes, filetype: %s, credentialType: %s, issuer: %s, dateIssued: %s",
-		ownerID, len(fileBytes), filetype, credentialType, issuer, dateIssued)
+	query = `INSERT INTO credentials (ownerID, filedata, filetype, type, issuer, date_issued, status)
+             VALUES (?, ?, ?, ?, ?, ?, 'active')`
 
 	_, err = db.Exec(query, ownerID, fileBytes, filetype, credentialType, issuer, dateIssued)
 	if err != nil {
@@ -167,6 +151,9 @@ func addCredential(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Error saving to database", http.StatusInternalServerError)
 		return
 	}
+
+	// Add credential to the blockchain
+	model.AddCredentialToBlockchain(ownerID, fileBytes, filetype, credentialType, issuer, dateIssued)
 
 	// Redirect back to the admin student list page
 	http.Redirect(w, r, "/login/adminstudentlist", http.StatusSeeOther)
@@ -318,26 +305,131 @@ func addNonAcademicHandler(w http.ResponseWriter, r *http.Request) {
 func MainHome(database *sql.DB) *mux.Router {
 	db = database // Assign the DB connection to the global variable
 
-	// Set up routes (r)
 	r := mux.NewRouter()
 
 	// ROUTES
-	r.HandleFunc("/admincredentials", adminCredHandler).Methods("GET") // To ADMIN CREDENTIALS PAGE
-	r.HandleFunc("/studentcredentials", stuCredHandler).Methods("GET") // To STUDENT CREDENTIALS PAGE
+	r.HandleFunc("/admincredentials", adminCredHandler).Methods("GET")
+	r.HandleFunc("/studentcredentials", stuCredHandler).Methods("GET")
+	r.HandleFunc("/add-non-academic", addNonAcademicHandler).Methods("POST")
+	r.HandleFunc("/add-credential", addCredential).Methods("POST")
+	r.HandleFunc("/add-credential-page", addCredentialPageHandler).Methods("GET")
 
-	// ENDPOINT ROUTES
-	r.HandleFunc("/add-non-academic", addNonAcademicHandler)
-	r.HandleFunc("/add-credential", addCredential)
-	r.HandleFunc("/add-credential", addCredentialPageHandler)
+	// STATIC FILES
+	staticAdmin := http.StripPrefix("/AdminCredentials", http.FileServer(http.Dir("../FrontEnd/HomePage/AdminHomePage/AdminCredentials")))
+	staticStudent := http.StripPrefix("/StudentCredentials", http.FileServer(http.Dir("../FrontEnd/HomePage/StudentHomePage/StudentCredentials")))
 
-	// r.HandleFunc("/admin-add-academic", a)
-
-	// STATIC FILES (Serve CSS, JS, images)
-	fsAdminCred := http.FileServer(http.Dir("../FrontEnd/HomePage/AdminHomePage/AdminCredentials"))
-	r.PathPrefix("/AdminCredentials/").Handler(http.StripPrefix("/AdminCredentials", fsAdminCred))
-
-	fsStuCred := http.FileServer(http.Dir("../FrontEnd/HomePage/StudentHomePage/StudentCredentials"))
-	r.PathPrefix("/StudentCredentials/").Handler(http.StripPrefix("/StudentCredentials", fsStuCred))
+	r.PathPrefix("/AdminCredentials/").Handler(staticAdmin)
+	r.PathPrefix("/StudentCredentials/").Handler(staticStudent)
 
 	return r
 }
+
+// func addCredential(w http.ResponseWriter, r *http.Request) {
+// 	if r.Method != http.MethodPost {
+// 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
+// 		return
+// 	}
+
+// 	// Parse the form to retrieve file data
+// 	err := r.ParseMultipartForm(10 << 20) // Limit file size to 10 MB
+// 	if err != nil {
+// 		http.Error(w, "Unable to parse form", http.StatusBadRequest)
+// 		return
+// 	}
+
+// 	file, handler, err := r.FormFile("filedata")
+// 	if err != nil {
+// 		http.Error(w, "Error retrieving file", http.StatusInternalServerError)
+// 		return
+// 	}
+// 	defer file.Close()
+
+// 	// Read file content
+// 	fileBytes, err := io.ReadAll(file)
+// 	if err != nil {
+// 		http.Error(w, "Error reading file", http.StatusInternalServerError)
+// 		return
+// 	}
+
+// 	// Get file type
+// 	filetype := handler.Header.Get("Content-Type")
+
+// 	// Retrieve studentID from the request form
+// 	studentID := r.FormValue("studentID")
+// 	if studentID == "" {
+// 		http.Error(w, "Student ID is required", http.StatusBadRequest)
+// 		return
+// 	}
+
+// 	// Fetch ownerID from the accounts table
+// 	var ownerID string
+// 	query := `
+// 		SELECT a.accountID
+// 		FROM accounts a
+// 		INNER JOIN students s ON s.userID = a.accountID
+// 		WHERE s.studentID = ?`
+
+// 	err = db.QueryRow(query, studentID).Scan(&ownerID)
+// 	if err != nil {
+// 		log.Printf("Error fetching account ID for student %s: %v", studentID, err)
+// 		http.Error(w, "Unable to retrieve account information", http.StatusInternalServerError)
+// 		return
+// 	}
+
+// 	var issuer string = "Admin"
+
+// 	// Get the credential type from the form
+// 	credentialType := r.FormValue("type")
+// 	if credentialType != "academic" && credentialType != "non-academic" && credentialType != "certificate" {
+// 		http.Error(w, "Invalid credential type", http.StatusBadRequest)
+// 		return
+// 	}
+
+// 	// Set date format
+// 	dateIssued := time.Now().Format("2006-01-02")
+
+// 	// Insert data into the database
+// 	query = `
+// 	INSERT INTO credentials (ownerID, filedata, filetype, type, issuer, date_issued, status)
+// 	VALUES (?, ?, ?, ?, ?, ?, 'active')`
+
+// 	log.Printf("ownerID: %s, fileBytes: %d bytes, filetype: %s, credentialType: %s, issuer: %s, dateIssued: %s",
+// 		ownerID, len(fileBytes), filetype, credentialType, issuer, dateIssued)
+
+// 	_, err = db.Exec(query, ownerID, fileBytes, filetype, credentialType, issuer, dateIssued)
+// 	if err != nil {
+// 		log.Printf("Error executing query: %v", err)
+// 		http.Error(w, "Error saving to database", http.StatusInternalServerError)
+// 		return
+// 	}
+
+// 	// Redirect back to the admin student list page
+// 	http.Redirect(w, r, "/login/adminstudentlist", http.StatusSeeOther)
+// }
+
+// func MainHome(database *sql.DB) *mux.Router {
+// 	db = database // Assign the DB connection to the global variable
+
+// 	// Set up routes (r)
+// 	r := mux.NewRouter()
+
+// 	// ROUTES
+// 	r.HandleFunc("/admincredentials", adminCredHandler).Methods("GET") // To ADMIN CREDENTIALS PAGE
+// 	r.HandleFunc("/studentcredentials", stuCredHandler).Methods("GET") // To STUDENT CREDENTIALS PAGE
+
+// 	// ENDPOINT ROUTES
+// 	r.HandleFunc("/add-non-academic", addNonAcademicHandler)
+// 	r.HandleFunc("/add-credential", addCredential)
+// 	r.HandleFunc("/add-credential", addCredentialPageHandler)
+
+// 	// r.HandleFunc("/admin-add-academic", a)
+
+// 	// STATIC FILES (Serve CSS, JS, images)
+// 	fsAdminCred := http.FileServer(http.Dir("../FrontEnd/HomePage/AdminHomePage/AdminCredentials"))
+// 	r.PathPrefix("/AdminCredentials/").Handler(http.StripPrefix("/AdminCredentials", fsAdminCred))
+
+// 	fsStuCred := http.FileServer(http.Dir("../FrontEnd/HomePage/StudentHomePage/StudentCredentials"))
+// 	r.PathPrefix("/StudentCredentials/").Handler(http.StripPrefix("/StudentCredentials", fsStuCred))
+
+// 	return r
+// }
