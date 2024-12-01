@@ -6,10 +6,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/TsoiEn/Research-Group/Soft_Eng_Research/Blockchain_Core/chaincode/consensus"
-	// "github.com/TsoiEn/softEng/Blockchain_Core/chaincode/consensus" // Replace with the actual import path of your `consensus` package
+	"github.com/TsoiEn/softEng/Blockchain_Core/chaincode/consensus" // Replace with the actual import path of your `consensus` package
 	//"github.com/TsoiEn/softEng/Blockchain_Core/chaincode/src"
-	"github.com/TsoiEn/Research-Group/Soft_Eng_Research/Blockchain_Core/chaincode/src/model" // Replace with the actual import path of your `model` package
+	"github.com/TsoiEn/softEng/Blockchain_Core/chaincode/src/model" // Replace with the actual import path of your `model` package
 )
 
 var studentChain = &model.StudentChain{}
@@ -62,7 +61,7 @@ func testAdminOperations() {
 	adminSuccess := admin.AddCredentialAdmin(newStudent, cred.Type, cred.Issuer, cred.DateIssued)
 	if adminSuccess {
 		// Add credential to the blockchain
-		err := credentialChain.AddCredentialToBlockchain(&cred)
+		err := credentialChain.AddCredential(&cred)
 		if err != nil {
 			fmt.Println("Failed to add credential to blockchain:", err)
 		} else {
@@ -110,7 +109,7 @@ func testStudentOperations() {
 	studentSuccess := student.AddCredential(cred.Type, cred.Issuer, cred.DateIssued)
 	if studentSuccess {
 		// Add credential to the blockchain
-		err := credentialChain.AddCredentialToBlockchain(&cred)
+		err := credentialChain.AddCredential(&cred)
 		if err != nil {
 			fmt.Println("Failed to add credential to blockchain:", err)
 		} else {
