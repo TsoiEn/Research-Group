@@ -1,5 +1,7 @@
 filippo.io/edwards25519 v1.1.0 h1:FNf4tywRC1HmFuKW5xopWpigGjJKiJSV0Cqo0cJWDaA=
 filippo.io/edwards25519 v1.1.0/go.mod h1:BxyFTGdWcka3PhytdK4V28tE5sGfRvvvRV7EaN4VDT4=
+github.com/TsoiEn/Research-Group/Soft_Eng_Research/Blockchain_Core/chaincode v0.0.0-20241130081917-60bf666fca94 h1:RW17b7SR99+qjKCXf9X9CUjvKteKp+7FBt8xLJ7GsO8=
+github.com/TsoiEn/Research-Group/Soft_Eng_Research/Blockchain_Core/chaincode v0.0.0-20241130081917-60bf666fca94/go.mod h1:GIugl/T7lQl0N1PMb0LXfFub+gJ5ueeGMX47PjeDKMQ=
 github.com/go-sql-driver/mysql v1.8.1 h1:LedoTUt/eveggdHS9qUFC1EFSa8bU2+1pZjSRpvNJ1Y=
 github.com/go-sql-driver/mysql v1.8.1/go.mod h1:wEBSXgmK//2ZFJyE+qWnIsVGmvmEKlqwuVSjsCm7DZg=
 github.com/google/gofuzz v1.2.0 h1:xRy4A+RhZaiKjJ1bPfwQ8sedCA+YS2YcCHW6ec7JMi0=

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/TsoiEn/Research-Group/Soft_Eng-Research/Blockchain_Core/chaincode/consensus"
-	model "github.com/TsoiEn/Research-Group/Soft_Eng-Research/Blockchain_Core/chaincode/src/model"
+	"github.com/TsoiEn/Research-Group/Soft_Eng_Research/Blockchain_Core/chaincode/consensus"
+	model "github.com/TsoiEn/Research-Group/Soft_Eng_Research/Blockchain_Core/chaincode/src/model"
 )
 
 type Blockchain struct {
@@ -57,16 +57,23 @@ func (bc *Blockchain) CreateBlock(data string) error {
 }
 
 func NewBlockchain(nodeID string, peers []string) *Blockchain {
+	// Step 1: Create and start the Raft node
 	raftNode := consensus.NewRaftNode(nodeID, peers)
 
-	// Start Raft node
+	// Start the Raft node
 	err := raftNode.Start()
 	if err != nil {
 		log.Fatalf("Failed to start Raft node: %v", err)
 	}
 
-	return &Blockchain{
-		Blocks:   []*model.Block{},
+	genesisBlock := model.CreateBlock(0, []byte("Genesis Block"), nil)
+
+	chain := &Blockchain{
+		Blocks:   []*model.Block{genesisBlock},
 		RaftNode: raftNode,
 	}
+
+	log.Printf("Blockchain initialized with genesis block: %+v", genesisBlock)
+
+	return chain
 }

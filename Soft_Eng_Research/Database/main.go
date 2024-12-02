@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 
+	blockchain "github.com/TsoiEn/Research-Group/Soft_Eng_Research/Blockchain_Core/chaincode/src"
 	dbHandler "github.com/TsoiEn/Research-Group/Soft_Eng_Research/Database/DB"
 	homeHandler "github.com/TsoiEn/Research-Group/Soft_Eng_Research/Database/HomePageQ"
 	loginHandler "github.com/TsoiEn/Research-Group/Soft_Eng_Research/Database/LoginPageQ"
@@ -16,6 +17,16 @@ import (
 
 // Global variable for DB connection
 var db *sql.DB
+
+var blockchainCore *blockchain.Blockchain
+
+func initBlockchain() *blockchain.Blockchain {
+	nodeID := "node1"                   // Example node ID
+	peers := []string{"node2", "node3"} // Example peer nodes
+
+	blockchainCore := blockchain.NewBlockchain(nodeID, peers)
+	return blockchainCore
+}
 
 func main() {
 	// Initialize the database
@@ -39,5 +50,10 @@ func main() {
 	// Start the local server
 	fmt.Println("Server is running on http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", r))
+
+	log.Println("Initializing blockchain...")
+
+	bc := blockchain.NewBlockchain("node1", []string{"node2", "node3"})
+	log.Printf("Blockchain initialized: %+v", bc)
 
 }

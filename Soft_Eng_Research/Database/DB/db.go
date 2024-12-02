@@ -12,7 +12,7 @@ var db *sql.DB
 // Initialize DB connection
 func InitDB() (*sql.DB, error) {
 	var err error
-	db, err = sql.Open("mysql", "RaffyEL:WeMakingDBS1@E@tcp(127.0.0.1:3306)/stucredstorage")
+	db, err = sql.Open("mysql", "cryteam:WeMakingDBS1@E@tcp(127.0.0.1:3306)/stucredstorage")
 	if err != nil {
 		log.Fatal(err)
 	}
