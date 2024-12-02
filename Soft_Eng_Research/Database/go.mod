@@ -10,6 +10,5 @@ require (
 
 require (
 	filippo.io/edwards25519 v1.1.0 // indirect
-	github.com/TsoiEn/Research-Group/Soft_Eng_Research/Blockchain_Core/chaincode v0.0.0-20241130081917-60bf666fca94
 	github.com/gorilla/securecookie v1.1.2 // indirect
 )
