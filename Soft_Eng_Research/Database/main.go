@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 
-	blockchain "github.com/TsoiEn/Research-Group/Soft_Eng_Research/Blockchain_Core/chaincode/src"
+	blockchain "github.com/TsoiEn/Research-Group/Soft_Eng_Research/Database/Blockchain_Core/chaincode/src"
 	dbHandler "github.com/TsoiEn/Research-Group/Soft_Eng_Research/Database/DB"
 	homeHandler "github.com/TsoiEn/Research-Group/Soft_Eng_Research/Database/HomePageQ"
 	loginHandler "github.com/TsoiEn/Research-Group/Soft_Eng_Research/Database/LoginPageQ"
