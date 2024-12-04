@@ -6,10 +6,10 @@ flowchart TD
     D --> E[Apply Machine Learning Model to Encrypted Data]
     E --> F{Consensus Mechanism?}
     F -->|Yes| G[Simulate Consensus Algorithm]
-    F -->|No| H[Skip Consensus (Single Node)]
+    F -->|No| H[Skip Consensus]
     G & H --> I[Process Secure Decentralized Queries]
     I --> J[Generate Results and Logs]
-    J --> K[Output Data (Encrypted or Decrypted)]
+    J --> K[Output Data]
     K --> L[End: Presentation Ready]
 ```
 
